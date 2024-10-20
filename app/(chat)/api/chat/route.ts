@@ -5,6 +5,8 @@ import { customModel } from "@/ai";
 import { auth } from "@/app/(auth)/auth";
 import { deleteChatById, getChatById, saveChat } from "@/db/queries";
 
+import { CHAT_SYSTEM_PROMPT } from "@/constants/Prompts";
+
 export async function POST(request: Request) {
   const { id, messages }: { id: string; messages: Array<Message> } =
     await request.json();
@@ -19,8 +21,7 @@ export async function POST(request: Request) {
 
   const result = await streamText({
     model: customModel,
-    system:
-      "you are a friendly assistant! keep your responses concise and helpful.",
+    system: CHAT_SYSTEM_PROMPT,
     messages: coreMessages,
     maxSteps: 5,
     tools: {
