@@ -50,6 +50,7 @@
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
   }
+
   .dark {
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
@@ -119,4 +120,8 @@
   .skeleton-div {
     @apply bg-foreground/20 animate-pulse;
   }
+}
+
+.font-libre-baskerville {
+  font-family: 'Libre Baskerville', serif;
 }
