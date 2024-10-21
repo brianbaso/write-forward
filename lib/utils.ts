@@ -51,6 +51,7 @@ export function generateUUID(): string {
   });
 }
 
+// TODO: Remove tool related code
 function addToolMessageToChat({
   toolMessage,
   messages,
