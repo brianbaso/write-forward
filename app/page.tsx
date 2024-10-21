@@ -1,6 +1,6 @@
 "use client"
 import { useState, useEffect, useCallback } from "react"
-import { TextareaJournal } from "@/components/ui/textarea-journal"
+import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 // import { createAnalysis } from '../lib/api';
 // import { useAnalysisContext } from './context/AnalysisContext';
@@ -68,7 +68,7 @@ export default function Home() {
                     </div>
                 ) : (
                     <>
-                        <TextareaJournal
+                        <Textarea
                             className={`w-1/2 bg-gray-800 border-2 border-gray-600 text-md rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${privacyMode ? 'text-zinc-600 placeholder:text-zinc-600' : 'text-zinc-200 placeholder:text-zinc-500'
                                 }`}
                             placeholder="Type here..."
