@@ -1,9 +1,7 @@
 import {
   CoreMessage,
-  CoreToolMessage,
   generateId,
   Message,
-  ToolInvocation,
 } from "ai";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -51,52 +49,11 @@ export function generateUUID(): string {
   });
 }
 
-function addToolMessageToChat({
-  toolMessage,
-  messages,
-}: {
-  toolMessage: CoreToolMessage;
-  messages: Array<Message>;
-}): Array<Message> {
-  return messages.map((message) => {
-    if (message.toolInvocations) {
-      return {
-        ...message,
-        toolInvocations: message.toolInvocations.map((toolInvocation) => {
-          const toolResult = toolMessage.content.find(
-            (tool) => tool.toolCallId === toolInvocation.toolCallId,
-          );
-
-          if (toolResult) {
-            return {
-              ...toolInvocation,
-              state: "result",
-              result: toolResult.result,
-            };
-          }
-
-          return toolInvocation;
-        }),
-      };
-    }
-
-    return message;
-  });
-}
-
 export function convertToUIMessages(
   messages: Array<CoreMessage>,
 ): Array<Message> {
   return messages.reduce((chatMessages: Array<Message>, message) => {
-    if (message.role === "tool") {
-      return addToolMessageToChat({
-        toolMessage: message as CoreToolMessage,
-        messages: chatMessages,
-      });
-    }
-
     let textContent = "";
-    let toolInvocations: Array<ToolInvocation> = [];
 
     if (typeof message.content === "string") {
       textContent = message.content;
@@ -104,13 +61,6 @@ export function convertToUIMessages(
       for (const content of message.content) {
         if (content.type === "text") {
           textContent += content.text;
-        } else if (content.type === "tool-call") {
-          toolInvocations.push({
-            state: "call",
-            toolCallId: content.toolCallId,
-            toolName: content.toolName,
-            args: content.args,
-          });
         }
       }
     }
@@ -119,7 +69,6 @@ export function convertToUIMessages(
       id: generateId(),
       role: message.role,
       content: textContent,
-      toolInvocations,
     });
 
     return chatMessages;

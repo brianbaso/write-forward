@@ -1,9 +1,12 @@
 import Link from "next/link";
+import { HiMiniUser } from "react-icons/hi2";
 
 import { auth, signOut } from "@/app/(auth)/auth";
 
-import { History } from "./history";
+import Logo from "./logo";
+import { SidebarMenu } from "./sidebar-menu";
 import { ThemeToggle } from "./theme-toggle";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import {
   DropdownMenu,
@@ -12,30 +15,30 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 
+
 export const Navbar = async () => {
   let session = await auth();
 
   return (
     <>
-      <div className="bg-background absolute top-0 left-0 w-dvw py-2 px-3 justify-between flex flex-row items-center z-30">
+      <div className="bg-gray-900 absolute top-0 left-0 w-dvw py-2 px-3 justify-between flex flex-row items-center z-30">
         <div className="flex flex-row gap-3 items-center">
-          <History user={session?.user} />
+          <SidebarMenu user={session?.user} />
           <div className="flex flex-row gap-2 items-center">
-            <div className="text-sm dark:text-zinc-300">Next.js Chatbot</div>
+            <Logo />
           </div>
         </div>
 
         {session ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button
-                className="py-1.5 px-2 h-fit font-normal"
-                variant="secondary"
-              >
-                {session.user?.email}
-              </Button>
+              <Avatar className="cursor-pointer">
+                <AvatarImage alt="Avatar" />
+                <AvatarFallback><HiMiniUser className="size-6" /></AvatarFallback>
+              </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
+              <DropdownMenuItem>{session.user?.email}</DropdownMenuItem>
               <DropdownMenuItem>
                 <ThemeToggle />
               </DropdownMenuItem>
