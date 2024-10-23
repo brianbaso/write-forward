@@ -7,6 +7,9 @@ import { useParams, usePathname } from "next/navigation";
 import { User } from "next-auth";
 import { useEffect, useState } from "react";
 import { BiSidebar as MenuIcon } from "react-icons/bi";
+import { IoIosJournal } from "react-icons/io";
+import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
+
 import { toast } from "sonner";
 import useSWR from "swr";
 
@@ -109,7 +112,7 @@ export const SidebarMenu = ({ user }: { user: User | undefined }) => {
           setIsSidebarVisible(state);
         }}
       >
-        <SheetContent side="left" className="p-3 w-80 bg-muted">
+        <SheetContent side="left" className="p-3 w-60 bg-muted flex flex-col">
           <SheetHeader>
             <VisuallyHidden.Root>
               <SheetTitle className="text-left">History</SheetTitle>
@@ -120,13 +123,32 @@ export const SidebarMenu = ({ user }: { user: User | undefined }) => {
           </SheetHeader>
 
           {isChatPage ? (
-            <>
-              {/* <div className="mb-10">
-                <div className="dark:text-zinc-300 mb-10">Journal</div>
-              </div> */}
-              <div className="text-sm flex flex-row items-center justify-between mt-20">
+            <div className="flex flex-col h-full mt-6">
+              <div className="mt-auto flex flex-col gap-2 pb-10 pt-2">
+                <Button
+                  className="font-medium bg-zinc-200 dark:bg-zinc-300 text-sm flex justify-start flex-row"
+                  asChild
+                >
+                  <Link href="/chat">
+                    <IoChatbubbleEllipsesOutline size={20} />
+                    <div className="ml-1.5">New Chat</div>
+                  </Link>
+                </Button>
+                <Button
+                  className="font-medium bg-zinc-200 dark:bg-zinc-300 text-sm flex justify-start flex-row"
+                  asChild
+                >
+                  <Link href="/">
+                    <PencilEditIcon size={14} />
+                    <div className="ml-3">Write a Journal Entry</div>
+                  </Link>
+                </Button>
+                {/* <div className="h-[1px] bg-zinc-300 dark:bg-zinc-600 my-4 w-full" /> */}
+              </div>
+
+              <div className="text-sm flex flex-row items-center justify-between">
                 <div className="flex flex-row gap-2">
-                  <div className="dark:text-zinc-300">History</div>
+                  <div className="dark:text-zinc-300 font-medium pl-1">History</div>
 
                   <div className="dark:text-zinc-400 text-zinc-500">
                     {history === undefined ? "loading" : history.length} chats
@@ -134,19 +156,7 @@ export const SidebarMenu = ({ user }: { user: User | undefined }) => {
                 </div>
               </div>
 
-              <div className="mt-3 flex flex-col">
-                {user && (
-                  <Button
-                    className="font-normal text-sm flex flex-row justify-between"
-                    asChild
-                  >
-                    <Link href="/chat">
-                      <div>Start a new chat</div>
-                      <PencilEditIcon size={14} />
-                    </Link>
-                  </Button>
-                )}
-
+              <div className="flex flex-col">
                 <div className="flex flex-col overflow-y-scroll p-1 h-[calc(100dvh-124px)]">
                   {!user ? (
                     <div className="text-zinc-500 h-dvh w-full flex flex-row justify-center items-center text-sm gap-2">
@@ -227,7 +237,7 @@ export const SidebarMenu = ({ user }: { user: User | undefined }) => {
                     ))}
                 </div>
               </div>
-            </>
+            </div>
           ) : (
             <div className="text-zinc-500 h-dvh w-full flex flex-row justify-center items-center text-sm gap-2">
               <InfoIcon />
