@@ -6,12 +6,12 @@ import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { User } from "next-auth";
 import { useEffect, useState } from "react";
+import { BiSidebar as MenuIcon } from "react-icons/bi";
 import { toast } from "sonner";
 import useSWR from "swr";
 
 import { Chat } from "@/db/schema";
 import { fetcher, getTitleFromChat } from "@/lib/utils";
-import { BiSidebar as MenuIcon } from "react-icons/bi";
 
 import {
   InfoIcon,
@@ -100,7 +100,7 @@ export const SidebarMenu = ({ user }: { user: User | undefined }) => {
           setIsSidebarVisible(true);
         }}
       >
-        <MenuIcon className="w-6 h-6 text-gray-600 hover:text-gray-800 dark:text-gray-200 dark:hover:text-gray-500" />
+        <MenuIcon className="size-6 text-gray-600 hover:text-gray-800 dark:text-gray-200 dark:hover:text-gray-500" />
       </div>
 
       <Sheet

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+
 import { JOURNAL_ANALYSIS_PROMPT } from '@/constants/Prompts';
 
 const CLAUDE_API_URL = 'https://api.anthropic.com/v1/messages';

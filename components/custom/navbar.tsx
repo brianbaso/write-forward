@@ -1,20 +1,20 @@
 import Link from "next/link";
+import { HiMiniUser } from "react-icons/hi2";
 
 import { auth, signOut } from "@/app/(auth)/auth";
 
+import Logo from "./logo";
+import { SidebarMenu } from "./sidebar-menu";
 import { ThemeToggle } from "./theme-toggle";
-import { Button } from "../ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Button } from "../ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { HiMiniUser } from "react-icons/hi2";
 
-import { SidebarMenu } from "./sidebar-menu";
-import Logo from "./logo";
 
 export const Navbar = async () => {
   let session = await auth();
@@ -34,7 +34,7 @@ export const Navbar = async () => {
             <DropdownMenuTrigger asChild>
               <Avatar className="cursor-pointer">
                 <AvatarImage alt="Avatar" />
-                <AvatarFallback><HiMiniUser className="w-6 h-6" /></AvatarFallback>
+                <AvatarFallback><HiMiniUser className="size-6" /></AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">

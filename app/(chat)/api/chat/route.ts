@@ -3,9 +3,9 @@ import { z } from "zod";
 
 import { customModel } from "@/ai";
 import { auth } from "@/app/(auth)/auth";
+import { CHAT_SYSTEM_PROMPT } from "@/constants/Prompts";
 import { deleteChatById, getChatById, saveChat } from "@/db/queries";
 
-import { CHAT_SYSTEM_PROMPT } from "@/constants/Prompts";
 
 export async function POST(request: Request) {
   const { id, messages }: { id: string; messages: Array<Message> } =

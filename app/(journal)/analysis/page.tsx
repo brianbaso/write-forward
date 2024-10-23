@@ -1,8 +1,11 @@
 'use client';
-import { useAnalysisContext } from '@/app/context/AnalysisContext';
-import ReactMarkdown from 'react-markdown'
-import '@/app/styles/markdown-styles.css'
+
 import { useState, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown'
+
+import { useAnalysisContext } from '@/app/context/AnalysisContext';
+
+import '@/app/styles/markdown-styles.css'
 
 export default function Analysis() {
     const { analysis } = useAnalysisContext();

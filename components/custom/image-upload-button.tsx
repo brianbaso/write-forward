@@ -1,13 +1,14 @@
 import React, { forwardRef, useRef } from "react";
 import { FiPaperclip } from "react-icons/fi";
+
 import { Button } from "@/components/ui/button"
-import { getTextFromImage } from "@/lib/api";
 import {
     Tooltip,
     TooltipContent,
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { getTextFromImage } from "@/lib/api";
 
 interface ImageUploadButtonProps {
     handleSubmit: (text: string) => void;

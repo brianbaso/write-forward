@@ -1,5 +1,6 @@
-import { Switch } from "@/components/ui/switch"
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+
+import { Switch } from "@/components/ui/switch"
 import {
     Tooltip,
     TooltipContent,

@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { Toaster } from "sonner";
-import { AnalysisProvider } from "@/app/context/AnalysisContext";
 
+import { AnalysisProvider } from "@/app/context/AnalysisContext";
 import { Navbar } from "@/components/custom/navbar";
 import { ThemeProvider } from "@/components/custom/theme-provider";
 

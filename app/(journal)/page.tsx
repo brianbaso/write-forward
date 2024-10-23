@@ -1,16 +1,15 @@
 "use client"
-import { useState, useEffect, useCallback } from "react"
-import { Textarea } from "@/components/ui/textarea"
-import { Button } from "@/components/ui/button"
-import { createAnalysis } from '@/lib/api';
-import { useAnalysisContext } from '../context/AnalysisContext';
 import { useRouter } from 'next/navigation';
+import { useState, useEffect, useCallback } from "react"
 
-import LoadingEllipsis from '@/components/custom/loading-ellipsis';
 import ImageUploadButton from "@/components/custom/image-upload-button";
+import LoadingEllipsis from '@/components/custom/loading-ellipsis';
 import PrivacySwitch from '@/components/custom/privacy-switch';
+import { Button } from "@/components/ui/button"
+import { Textarea } from "@/components/ui/textarea"
+import { createAnalysis } from '@/lib/api';
 
-// Create analysis page, create text from image API endpoint
+import { useAnalysisContext } from '../context/AnalysisContext';
 
 export default function Home() {
     const [inputText, setInputText] = useState("")
@@ -42,7 +41,7 @@ export default function Home() {
             setErrorMessage("An error occurred while creating the analysis. Please try again.")
             setIsLoading(false)
         }
-    }, [inputText, analysisContext, router]);
+    }, [analysisContext, router]);
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
@@ -57,7 +56,7 @@ export default function Home() {
         return () => {
             window.removeEventListener("keydown", handleKeyDown)
         }
-    }, [handleSubmit]);
+    }, [inputText, handleSubmit]);
 
     return (
         <>
