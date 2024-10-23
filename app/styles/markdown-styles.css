@@ -1,0 +1,38 @@
+* {
+    font-family: helvetica, arial, sans-serif;
+}
+
+.markdown-content h1 {
+    font-size: 2em;
+    margin-bottom: 0.5em;
+}
+
+.markdown-content h2 {
+    font-size: 1.5em;
+    margin-bottom: 0.5em;
+}
+
+.markdown-content p {
+    margin-bottom: 1em;
+    font-size: 1.1em;
+    line-height: 1.6;
+}
+
+.markdown-content ul,
+.markdown-content ol {
+    margin-left: 1.5em;
+    margin-bottom: 1em;
+}
+
+.markdown-content code {
+    background-color: #2d3748;
+    padding: 0.2em 0.4em;
+    border-radius: 0.3em;
+}
+
+.markdown-content pre {
+    background-color: #2d3748;
+    padding: 1em;
+    border-radius: 0.3em;
+    overflow-x: auto;
+}

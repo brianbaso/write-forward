@@ -2,20 +2,22 @@
 import { useState, useEffect, useCallback } from "react"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
-// import { createAnalysis } from '../lib/api';
-// import { useAnalysisContext } from './context/AnalysisContext';
+import { createAnalysis } from '@/lib/api';
+import { useAnalysisContext } from '../context/AnalysisContext';
 import { useRouter } from 'next/navigation';
 
 import LoadingEllipsis from '@/components/custom/loading-ellipsis';
 import ImageUploadButton from "@/components/custom/image-upload-button";
 import PrivacySwitch from '@/components/custom/privacy-switch';
 
+// Create analysis page, create text from image API endpoint
+
 export default function Home() {
     const [inputText, setInputText] = useState("")
     const [errorMessage, setErrorMessage] = useState("")
     const [isLoading, setIsLoading] = useState(false)
     const [privacyMode, setPrivacyMode] = useState(false)
-    // const analysisContext = useAnalysisContext();
+    const analysisContext = useAnalysisContext();
     const router = useRouter();
 
     const handleSubmit = useCallback(async (text: string) => {
@@ -24,23 +26,23 @@ export default function Home() {
             return
         }
 
-        // if (!analysisContext || !analysisContext.setAnalysis) {
-        //     console.error("Analysis context not available");
-        //     setErrorMessage("An error occurred. Please try again later.")
-        //     return
-        // }
+        if (!analysisContext || !analysisContext.setAnalysis) {
+            console.error("Analysis context not available");
+            setErrorMessage("An error occurred. Please try again later.")
+            return
+        }
 
         setIsLoading(true)
-        // try {
-        //     const analysis = await createAnalysis(text)
-        //     analysisContext.setAnalysis(analysis.content[0].text)
-        //     router.push('/analysis');
-        // } catch (error) {
-        //     console.error("Error creating analysis:", error)
-        //     setErrorMessage("An error occurred while creating the analysis. Please try again.")
-        //     setIsLoading(false)
-        // }
-    }, [inputText, router]); // add back analysisContext
+        try {
+            const analysis = await createAnalysis(text)
+            analysisContext.setAnalysis(analysis.content[0].text)
+            router.push('/analysis');
+        } catch (error) {
+            console.error("Error creating analysis:", error)
+            setErrorMessage("An error occurred while creating the analysis. Please try again.")
+            setIsLoading(false)
+        }
+    }, [inputText, analysisContext, router]);
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {

@@ -4,13 +4,17 @@ import { auth, signOut } from "@/app/(auth)/auth";
 
 import { ThemeToggle } from "./theme-toggle";
 import { Button } from "../ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { ClientSideNavContent } from "./client-side-nav-content";
+import { HiMiniUser } from "react-icons/hi2";
+
+import { SidebarMenu } from "./sidebar-menu";
+import Logo from "./logo";
 
 export const Navbar = async () => {
   let session = await auth();
@@ -18,19 +22,23 @@ export const Navbar = async () => {
   return (
     <>
       <div className="bg-gray-900 absolute top-0 left-0 w-dvw py-2 px-3 justify-between flex flex-row items-center z-30">
-        <ClientSideNavContent session={session} />
+        <div className="flex flex-row gap-3 items-center">
+          <SidebarMenu user={session?.user} />
+          <div className="flex flex-row gap-2 items-center">
+            <Logo />
+          </div>
+        </div>
 
         {session ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button
-                className="py-1.5 px-2 h-fit font-normal"
-                variant="secondary"
-              >
-                {session.user?.email}
-              </Button>
+              <Avatar className="cursor-pointer">
+                <AvatarImage alt="Avatar" />
+                <AvatarFallback><HiMiniUser className="w-6 h-6" /></AvatarFallback>
+              </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
+              <DropdownMenuItem>{session.user?.email}</DropdownMenuItem>
               <DropdownMenuItem>
                 <ThemeToggle />
               </DropdownMenuItem>

@@ -1,7 +1,7 @@
 import React, { forwardRef, useRef } from "react";
 import { FiPaperclip } from "react-icons/fi";
 import { Button } from "@/components/ui/button"
-// import { getTextFromImage } from "@/lib/api";
+import { getTextFromImage } from "@/lib/api";
 import {
     Tooltip,
     TooltipContent,
