@@ -257,7 +257,9 @@ export function MultimodalInput({
         </Button>
       )}
 
-      <Button
+      {/* Hidden button disables attachment upload, but functionality still works if needed. */}
+
+      {/* <Button
         className="rounded-full p-1.5 h-fit absolute bottom-2 right-10 m-0.5 dark:border-zinc-700"
         onClick={(event) => {
           event.preventDefault();
@@ -267,7 +269,7 @@ export function MultimodalInput({
         disabled={isLoading}
       >
         <PaperclipIcon size={14} />
-      </Button>
+      </Button> */}
     </div>
   );
 }
