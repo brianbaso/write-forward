@@ -21,14 +21,14 @@ import { Textarea } from "../ui/textarea";
 
 const suggestedActions = [
   {
-    title: "What is the weather",
-    label: "in San Francisco?",
-    action: "What is the weather in San Francisco?",
+    title: "I want to reframe",
+    label: "a problem that I'm dealing with.",
+    action: "I want to reframe a problem that I'm dealing with.",
   },
   {
-    title: "Answer like I'm 5,",
-    label: "why is the sky blue?",
-    action: "Answer like I'm 5, why is the sky blue?",
+    title: "I want to talk about",
+    label: "something that's bothering me.",
+    action: "I want to talk about something that's bothering me.",
   },
 ];
 

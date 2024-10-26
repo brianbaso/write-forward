@@ -72,7 +72,7 @@ export default function Home() {
                         <Textarea
                             className={`w-1/2 bg-gray-800 border-2 border-gray-600 text-md rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${privacyMode ? 'text-zinc-600 placeholder:text-zinc-600' : 'text-zinc-200 placeholder:text-zinc-500'
                                 }`}
-                            placeholder="Type here..."
+                            placeholder="Write a journal entry..."
                             value={inputText}
                             onChange={(e) => {
                                 setInputText(e.target.value)

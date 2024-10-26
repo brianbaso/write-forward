@@ -52,7 +52,7 @@ export const SidebarMenu = ({ user }: { user: User | undefined }) => {
   const pathname = usePathname();
   const isChatPage = pathname.startsWith('/chat');
 
-  const [isHistoryVisible, setIsSidebarVisible] = useState(false);
+  const [isSidebarVisible, setIsSidebarVisible] = useState(false);
   const {
     data: history,
     isLoading,
@@ -95,19 +95,25 @@ export const SidebarMenu = ({ user }: { user: User | undefined }) => {
     setShowDeleteDialog(false);
   };
 
+  const closeSidebar = () => {
+    setIsSidebarVisible(false);
+  };
+
   return (
     <>
-      <div
-        className="cursor-pointer p-1.5"
-        onClick={() => {
-          setIsSidebarVisible(true);
-        }}
-      >
-        <MenuIcon className="size-6 text-gray-600 hover:text-gray-800 dark:text-gray-200 dark:hover:text-gray-500" />
-      </div>
+      {user && (
+        <div
+          className="cursor-pointer"
+          onClick={() => {
+            setIsSidebarVisible(true);
+          }}
+        >
+          <MenuIcon className="size-6 text-gray-600 hover:text-gray-800 dark:text-gray-200 dark:hover:text-gray-500" />
+        </div>
+      )}
 
       <Sheet
-        open={isHistoryVisible}
+        open={isSidebarVisible}
         onOpenChange={(state) => {
           setIsSidebarVisible(state);
         }}
@@ -129,7 +135,7 @@ export const SidebarMenu = ({ user }: { user: User | undefined }) => {
                   className="font-medium bg-zinc-200 dark:bg-zinc-300 text-sm flex justify-start flex-row"
                   asChild
                 >
-                  <Link href="/chat">
+                  <Link href="/chat" onClick={closeSidebar}>
                     <IoChatbubbleEllipsesOutline size={20} />
                     <div className="ml-1.5">New Chat</div>
                   </Link>
@@ -138,9 +144,9 @@ export const SidebarMenu = ({ user }: { user: User | undefined }) => {
                   className="font-medium bg-zinc-200 dark:bg-zinc-300 text-sm flex justify-start flex-row"
                   asChild
                 >
-                  <Link href="/">
+                  <Link href="/" onClick={closeSidebar}>
                     <PencilEditIcon size={14} />
-                    <div className="ml-3">Write a Journal Entry</div>
+                    <div className="ml-3">Go to Journal</div>
                   </Link>
                 </Button>
                 {/* <div className="h-[1px] bg-zinc-300 dark:bg-zinc-600 my-4 w-full" /> */}
@@ -239,9 +245,20 @@ export const SidebarMenu = ({ user }: { user: User | undefined }) => {
               </div>
             </div>
           ) : (
-            <div className="text-zinc-500 h-dvh w-full flex flex-row justify-center items-center text-sm gap-2">
-              <InfoIcon />
-              <div>Chat history is only available on chat pages.</div>
+            <div className="flex flex-col mt-6">
+              {user && (
+                <div className="mt-auto flex flex-col gap-2 pb-10 pt-2">
+                  <Button
+                    className="font-medium bg-zinc-200 dark:bg-zinc-300 text-sm flex justify-start flex-row"
+                    asChild
+                  >
+                    <Link href="/chat" onClick={closeSidebar}>
+                      <IoChatbubbleEllipsesOutline size={20} />
+                      <div className="ml-1.5">Go to Chat</div>
+                    </Link>
+                  </Button>
+                </div>
+              )}
             </div>
           )}
         </SheetContent>
