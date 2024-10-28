@@ -221,6 +221,7 @@ export function MultimodalInput({
         onChange={handleInput}
         className="min-h-[24px] overflow-hidden resize-none rounded-lg text-base bg-gray-800"
         rows={3}
+        id="chat-textarea"
         onKeyDown={(event) => {
           if (event.key === "Enter" && !event.shiftKey) {
             event.preventDefault();

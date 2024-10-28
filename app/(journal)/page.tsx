@@ -1,4 +1,6 @@
 "use client"
+import { Loader2 } from "lucide-react";
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect, useCallback } from "react"
 
@@ -7,10 +9,10 @@ import LoadingEllipsis from '@/components/custom/loading-ellipsis';
 import PrivacySwitch from '@/components/custom/privacy-switch';
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
+import { JOURNAL_PAGE_QUOTES } from '@/constants/Quotes';
 import { createAnalysis, getTextFromImage } from '@/lib/api';
 
 import { useAnalysisContext } from '../context/AnalysisContext';
-import { Loader2 } from "lucide-react";
 
 export default function Home() {
     const [inputText, setInputText] = useState("")
@@ -22,6 +24,7 @@ export default function Home() {
     const router = useRouter();
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
+    const [randomQuote, setRandomQuote] = useState("");
 
     const handleSubmit = useCallback(async (text: string) => {
         if (text.trim() === "") {
@@ -60,7 +63,7 @@ export default function Home() {
         return () => {
             window.removeEventListener("keydown", handleKeyDown)
         }
-    }, [inputText, handleSubmit, isUploadingImage]);  // Added isUploadingImage to dependencies
+    }, [inputText, handleSubmit, isUploadingImage]);
 
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -92,6 +95,11 @@ export default function Home() {
         }
     };
 
+    // Add this useEffect to set the quote on client-side only
+    useEffect(() => {
+        setRandomQuote(JOURNAL_PAGE_QUOTES[Math.floor(Math.random() * JOURNAL_PAGE_QUOTES.length)]);
+    }, []);
+
     return (
         <>
             <div className="flex flex-col items-center min-h-screen bg-gray-900 pt-40">
@@ -103,19 +111,24 @@ export default function Home() {
                     </div>
                 ) : (
                     <>
+                        <h1 className='w-1/2 text-zinc-400 text-md text-center font-libre-baskerville italic pb-4'>
+                            {randomQuote}
+                        </h1>
                         {imagePreview ? (
                             <div className="w-1/2 relative bg-gray-800 border-2 border-gray-600 rounded-lg overflow-hidden">
-                                <img
-                                    src={imagePreview}
+                                <Image
+                                    src={imagePreview || ''}
                                     alt="Uploaded preview"
-                                    className="object-contain w-[100px] h-[140px] opacity-70 mx-auto pb-2 pt-3"
+                                    width={100}
+                                    height={140}
+                                    className="opacity-70 mx-auto pb-2 pt-3"
+                                    style={{ objectFit: 'contain' }}
                                 />
                                 {isUploadingImage && (
                                     <div className="absolute inset-0 flex items-center justify-center">
-                                        <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+                                        <Loader2 className="size-8 animate-spin text-blue-500" />
                                     </div>
                                 )}
-                                {/* Add filename display */}
                                 <div className="text-zinc-400 text-sm text-center pb-2">
                                     {uploadedFileName && (uploadedFileName.length > 20
                                         ? `${uploadedFileName.substring(0, 20)}...`
@@ -132,6 +145,7 @@ export default function Home() {
                                     setInputText(e.target.value)
                                     setErrorMessage("")
                                 }}
+                                id="journal-textarea"
                             />
                         )}
                         {errorMessage && (

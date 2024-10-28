@@ -9,7 +9,6 @@ import { useEffect, useState } from "react";
 import { BiSidebar as MenuIcon } from "react-icons/bi";
 import { IoIosJournal } from "react-icons/io";
 import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
-
 import { toast } from "sonner";
 import useSWR from "swr";
 

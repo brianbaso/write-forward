@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { RiMentalHealthLine } from "react-icons/ri";
 
 import { LogoOpenAI, MessageIcon, VercelIcon } from "./icons";
-import { RiMentalHealthLine } from "react-icons/ri";
 
 
 export const Overview = () => {

@@ -39,9 +39,9 @@ export const Navbar = async () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem>{session.user?.email}</DropdownMenuItem>
-              <DropdownMenuItem>
+              {/* <DropdownMenuItem>
                 <ThemeToggle />
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
               <DropdownMenuItem className="p-1 z-50">
                 <form
                   className="w-full"
