@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { createAnalysis, getTextFromImage } from '@/lib/api';
 
 import { useAnalysisContext } from '../context/AnalysisContext';
+import { Loader2 } from "lucide-react"; // Add this import for the spinner icon
 
 export default function Home() {
     const [inputText, setInputText] = useState("")
@@ -18,6 +19,7 @@ export default function Home() {
     const [privacyMode, setPrivacyMode] = useState(false)
     const analysisContext = useAnalysisContext();
     const router = useRouter();
+    const [uploadedImage, setUploadedImage] = useState<string | null>(null);
 
     const handleSubmit = useCallback(async (text: string) => {
         if (text.trim() === "") {
@@ -63,21 +65,24 @@ export default function Home() {
         if (!file) return;
         setIsLoading(true);
 
+        // Create preview URL for the image
+        const previewUrl = URL.createObjectURL(file);
+        setUploadedImage(previewUrl);
+
         try {
             const formData = new FormData();
             formData.append('image', file);
-
             const res = await getTextFromImage(formData);
 
             if (res?.text) {
-                console.log('extracted text:', res.text);
-                handleSubmit(res.text);
+                setInputText(res.text);
             } else {
                 console.error('Error getting text from image');
             }
-
         } catch (error) {
             console.error(error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -92,16 +97,29 @@ export default function Home() {
                     </div>
                 ) : (
                     <>
-                        <Textarea
-                            className={`w-1/2 bg-gray-800 border-2 border-gray-600 text-md rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${privacyMode ? 'text-zinc-600 placeholder:text-zinc-600' : 'text-zinc-200 placeholder:text-zinc-500'
-                                }`}
-                            placeholder="Write a journal entry..."
-                            value={inputText}
-                            onChange={(e) => {
-                                setInputText(e.target.value)
-                                setErrorMessage("")
-                            }}
-                        />
+                        {uploadedImage ? (
+                            <div className="w-1/2 relative aspect-video bg-gray-800 border-2 border-gray-600 rounded-lg overflow-hidden">
+                                <img
+                                    src={uploadedImage}
+                                    alt="Uploaded preview"
+                                    className="object-contain w-full h-full opacity-50"
+                                />
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                    <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+                                </div>
+                            </div>
+                        ) : (
+                            <Textarea
+                                className={`w-1/2 bg-gray-800 border-2 border-gray-600 text-md rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${privacyMode ? 'text-zinc-600 placeholder:text-zinc-600' : 'text-zinc-200 placeholder:text-zinc-500'
+                                    }`}
+                                placeholder="Write a journal entry..."
+                                value={inputText}
+                                onChange={(e) => {
+                                    setInputText(e.target.value)
+                                    setErrorMessage("")
+                                }}
+                            />
+                        )}
                         {errorMessage && (
                             <div className="w-1/2 text-red-500 mt-2">{errorMessage}</div>
                         )}

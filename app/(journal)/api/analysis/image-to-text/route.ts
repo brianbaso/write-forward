@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createAnalysis } from '@/lib/api';
 
 const GOOGLE_CLOUD_VISION_API_URL = `https://vision.googleapis.com/v1/images:annotate?key=${process.env.GOOGLE_CLOUD_VISION_API_KEY}`;
 
@@ -60,9 +59,8 @@ export async function POST(request: NextRequest) {
 
             const text = data.responses[0].fullTextAnnotation?.text || '';
 
-            const analysis = await createAnalysis(text);
+            return NextResponse.json({ text });
 
-            return NextResponse.json({ analysis: analysis.content[0].text });
         } catch (error) {
             console.error('Error performing text from image:', error);
             return NextResponse.json({ error: 'Text from image API error' }, { status: 500 });
