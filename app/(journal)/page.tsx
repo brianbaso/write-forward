@@ -10,16 +10,18 @@ import { Textarea } from "@/components/ui/textarea"
 import { createAnalysis, getTextFromImage } from '@/lib/api';
 
 import { useAnalysisContext } from '../context/AnalysisContext';
-import { Loader2 } from "lucide-react"; // Add this import for the spinner icon
+import { Loader2 } from "lucide-react";
 
 export default function Home() {
     const [inputText, setInputText] = useState("")
     const [errorMessage, setErrorMessage] = useState("")
-    const [isLoading, setIsLoading] = useState(false)
+    const [isCreatingAnalysis, setIsCreatingAnalysis] = useState(false)
+    const [isUploadingImage, setIsUploadingImage] = useState(false)
     const [privacyMode, setPrivacyMode] = useState(false)
     const analysisContext = useAnalysisContext();
     const router = useRouter();
-    const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
+    const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
 
     const handleSubmit = useCallback(async (text: string) => {
         if (text.trim() === "") {
@@ -33,7 +35,7 @@ export default function Home() {
             return
         }
 
-        setIsLoading(true)
+        setIsCreatingAnalysis(true)
         try {
             const analysis = await createAnalysis(text)
             analysisContext.setAnalysis(analysis.content[0].text)
@@ -41,13 +43,13 @@ export default function Home() {
         } catch (error) {
             console.error("Error creating analysis:", error)
             setErrorMessage("An error occurred while creating the analysis. Please try again.")
-            setIsLoading(false)
+            setIsCreatingAnalysis(false)
         }
     }, [analysisContext, router]);
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
-            if (event.metaKey && event.key === "Enter") {
+            if (event.metaKey && event.key === "Enter" && !isUploadingImage) {
                 event.preventDefault();
                 handleSubmit(inputText);
             }
@@ -58,16 +60,20 @@ export default function Home() {
         return () => {
             window.removeEventListener("keydown", handleKeyDown)
         }
-    }, [inputText, handleSubmit]);
+    }, [inputText, handleSubmit, isUploadingImage]);  // Added isUploadingImage to dependencies
 
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (!file) return;
-        setIsLoading(true);
+        setIsUploadingImage(true);
+
+        if (file) {
+            setUploadedFileName(file.name);
+        }
 
         // Create preview URL for the image
         const previewUrl = URL.createObjectURL(file);
-        setUploadedImage(previewUrl);
+        setImagePreview(previewUrl);
 
         try {
             const formData = new FormData();
@@ -82,14 +88,14 @@ export default function Home() {
         } catch (error) {
             console.error(error);
         } finally {
-            setIsLoading(false);
+            setIsUploadingImage(false);
         }
     };
 
     return (
         <>
             <div className="flex flex-col items-center min-h-screen bg-gray-900 pt-40">
-                {isLoading ? (
+                {isCreatingAnalysis ? (
                     <div className="text-zinc-200 text-center text-xl font-libre-baskerville bg-gray-800 rounded-lg p-6">
                         Crafting Your Analysis<br />
                         <p className="text-4xl pt-2">🧘🏽‍♂️🪷</p>
@@ -97,15 +103,23 @@ export default function Home() {
                     </div>
                 ) : (
                     <>
-                        {uploadedImage ? (
-                            <div className="w-1/2 relative aspect-video bg-gray-800 border-2 border-gray-600 rounded-lg overflow-hidden">
+                        {imagePreview ? (
+                            <div className="w-1/2 relative bg-gray-800 border-2 border-gray-600 rounded-lg overflow-hidden">
                                 <img
-                                    src={uploadedImage}
+                                    src={imagePreview}
                                     alt="Uploaded preview"
-                                    className="object-contain w-full h-full opacity-50"
+                                    className="object-contain w-[100px] h-[140px] opacity-70 mx-auto pb-2 pt-3"
                                 />
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+                                {isUploadingImage && (
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                        <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+                                    </div>
+                                )}
+                                {/* Add filename display */}
+                                <div className="text-zinc-400 text-sm text-center pb-2">
+                                    {uploadedFileName && (uploadedFileName.length > 20
+                                        ? `${uploadedFileName.substring(0, 20)}...`
+                                        : uploadedFileName)}
                                 </div>
                             </div>
                         ) : (
@@ -129,7 +143,13 @@ export default function Home() {
                             </div>
                             <div className="flex space-x-2">
                                 <ImageUploadButton handleFileChange={handleFileChange} />
-                                <Button variant="journal" onClick={() => handleSubmit(inputText)}>⌘ + ↵ Submit</Button>
+                                <Button
+                                    variant="journal"
+                                    onClick={() => handleSubmit(inputText)}
+                                    disabled={isUploadingImage}
+                                >
+                                    ⌘ + ↵ Submit
+                                </Button>
                             </div>
                         </div>
                     </>
