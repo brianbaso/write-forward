@@ -1,6 +1,6 @@
 export const createAnalysis = async (userInput: string): Promise<any> => {
     try {
-        const response = await fetch('/api/analysis/create', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/analysis/create`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -8,6 +8,7 @@ export const createAnalysis = async (userInput: string): Promise<any> => {
             body: JSON.stringify({ userInput }),
         });
 
+        // try to look at auth middleware for other api routes 
         if (!response.ok) {
             throw new Error(`HTTP error status: ${response.status}`);
         }
@@ -21,7 +22,7 @@ export const createAnalysis = async (userInput: string): Promise<any> => {
 
 export const getTextFromImage = async (formData: FormData): Promise<any> => {
     try {
-        const response = await fetch('/api/textFromImage', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/analysis/image-to-text`, {
             method: 'POST',
             body: formData,
         });

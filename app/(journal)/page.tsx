@@ -7,7 +7,7 @@ import LoadingEllipsis from '@/components/custom/loading-ellipsis';
 import PrivacySwitch from '@/components/custom/privacy-switch';
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
-import { createAnalysis } from '@/lib/api';
+import { createAnalysis, getTextFromImage } from '@/lib/api';
 
 import { useAnalysisContext } from '../context/AnalysisContext';
 
@@ -58,6 +58,29 @@ export default function Home() {
         }
     }, [inputText, handleSubmit]);
 
+    const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+        setIsLoading(true);
+
+        try {
+            const formData = new FormData();
+            formData.append('image', file);
+
+            const res = await getTextFromImage(formData);
+
+            if (res?.text) {
+                console.log('extracted text:', res.text);
+                handleSubmit(res.text);
+            } else {
+                console.error('Error getting text from image');
+            }
+
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     return (
         <>
             <div className="flex flex-col items-center min-h-screen bg-gray-900 pt-40">
@@ -87,7 +110,7 @@ export default function Home() {
                                 <PrivacySwitch privacyMode={privacyMode} setPrivacyMode={setPrivacyMode} />
                             </div>
                             <div className="flex space-x-2">
-                                <ImageUploadButton handleSubmit={handleSubmit} setIsLoading={setIsLoading} />
+                                <ImageUploadButton handleFileChange={handleFileChange} />
                                 <Button variant="journal" onClick={() => handleSubmit(inputText)}>⌘ + ↵ Submit</Button>
                             </div>
                         </div>
