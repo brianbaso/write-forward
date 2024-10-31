@@ -74,9 +74,8 @@ export default function Home() {
             setUploadedFileName(file.name);
         }
 
-        // Create preview URL for the image
-        const previewUrl = URL.createObjectURL(file);
-        setImagePreview(previewUrl);
+        // const previewUrl = URL.createObjectURL(file);
+        setImagePreview("test");
 
         try {
             const formData = new FormData();
@@ -95,7 +94,6 @@ export default function Home() {
         }
     };
 
-    // Add this useEffect to set the quote on client-side only
     useEffect(() => {
         setRandomQuote(JOURNAL_PAGE_QUOTES[Math.floor(Math.random() * JOURNAL_PAGE_QUOTES.length)]);
     }, []);
@@ -111,11 +109,11 @@ export default function Home() {
                     </div>
                 ) : (
                     <>
-                        <h1 className='w-1/2 text-zinc-400 text-md text-center font-libre-baskerville italic pb-4'>
+                        <h1 className='w-[90%] md:w-1/2 text-zinc-400 text-md text-center font-libre-baskerville italic pb-4'>
                             {randomQuote}
                         </h1>
                         {imagePreview ? (
-                            <div className="w-1/2 relative bg-gray-800 border-2 border-gray-600 rounded-lg overflow-hidden">
+                            <div className="w-[90%] md:w-1/2  relative bg-gray-800 border-2 border-gray-600 rounded-lg overflow-hidden">
                                 <Image
                                     src={imagePreview || ''}
                                     alt="Uploaded preview"
@@ -137,7 +135,7 @@ export default function Home() {
                             </div>
                         ) : (
                             <Textarea
-                                className={`w-1/2 bg-gray-800 border-2 border-gray-600 text-md rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${privacyMode ? 'text-zinc-600 placeholder:text-zinc-600' : 'text-zinc-200 placeholder:text-zinc-500'
+                                className={`w-[90%] md:w-1/2 h-[35vh] md:h-[20vh] bg-gray-800 border-2 border-gray-600 text-md rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${privacyMode ? 'text-zinc-600 placeholder:text-zinc-600' : 'text-zinc-200 placeholder:text-zinc-500'
                                     }`}
                                 placeholder="Write a journal entry..."
                                 value={inputText}
@@ -151,8 +149,8 @@ export default function Home() {
                         {errorMessage && (
                             <div className="w-1/2 text-red-500 mt-2">{errorMessage}</div>
                         )}
-                        <div className="w-1/2 flex justify-between items-center pt-2">
-                            <div className="flex items-center space-x-2">
+                        <div className="w-[90%] md:w-1/2 flex justify-between items-center pt-2">
+                            <div className="flex items-center">
                                 <PrivacySwitch privacyMode={privacyMode} setPrivacyMode={setPrivacyMode} />
                             </div>
                             <div className="flex space-x-2">

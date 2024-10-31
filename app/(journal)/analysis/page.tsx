@@ -29,8 +29,8 @@ export default function Analysis() {
     }, [analysis]);
 
     return (
-        <div className="flex flex-col items-center min-h-screen bg-gray-900 pt-40">
-            <div className="w-1/2 text-zinc-300 bg-gray-800 rounded-lg p-8 mb-4">
+        <div className="flex flex-col items-center min-h-screen bg-gray-900 pt-24 md:pt-40">
+            <div className="w-[90%] md:w-1/2 text-zinc-300 bg-gray-800 rounded-lg p-8 mb-4">
                 <h1 className="text-2xl font-bold text-center pb-5 font-libre-baskerville">{title}</h1>
                 {content ? (
                     <ReactMarkdown className="markdown-content">{content}</ReactMarkdown>

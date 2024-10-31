@@ -50,6 +50,7 @@ export const SidebarMenu = ({ user }: { user: User | undefined }) => {
   const { id } = useParams();
   const pathname = usePathname();
   const isChatPage = pathname.startsWith('/chat');
+  const isAnalysisPage = pathname.startsWith('/analysis');
 
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
   const {
@@ -247,6 +248,18 @@ export const SidebarMenu = ({ user }: { user: User | undefined }) => {
             <div className="flex flex-col mt-6">
               {user && (
                 <div className="mt-auto flex flex-col gap-2 pb-10 pt-2">
+                  {isAnalysisPage ? (
+                    <Button
+                      className="font-medium bg-zinc-200 dark:bg-zinc-300 text-sm flex justify-start flex-row"
+                      asChild
+                    >
+                      <Link href="/" onClick={closeSidebar}>
+                        <PencilEditIcon size={14} />
+                        <div className="ml-3">New Journal Entry</div>
+                      </Link>
+                    </Button>
+                  ) : ""}
+
                   <Button
                     className="font-medium bg-zinc-200 dark:bg-zinc-300 text-sm flex justify-start flex-row"
                     asChild
@@ -261,7 +274,7 @@ export const SidebarMenu = ({ user }: { user: User | undefined }) => {
             </div>
           )}
         </SheetContent>
-      </Sheet>
+      </Sheet >
 
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
