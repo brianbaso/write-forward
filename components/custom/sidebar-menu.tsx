@@ -144,9 +144,9 @@ export const SidebarMenu = ({ user }: { user: User | undefined }) => {
                   className="font-medium bg-zinc-200 dark:bg-zinc-300 text-sm flex justify-start flex-row"
                   asChild
                 >
-                  <Link href="/" onClick={closeSidebar}>
+                  <Link href="/new" onClick={closeSidebar}>
                     <PencilEditIcon size={14} />
-                    <div className="ml-3">Go to Journal</div>
+                    <div className="ml-3">New Journal Entry</div>
                   </Link>
                 </Button>
                 {/* <div className="h-[1px] bg-zinc-300 dark:bg-zinc-600 my-4 w-full" /> */}
@@ -253,7 +253,7 @@ export const SidebarMenu = ({ user }: { user: User | undefined }) => {
                       className="font-medium bg-zinc-200 dark:bg-zinc-300 text-sm flex justify-start flex-row"
                       asChild
                     >
-                      <Link href="/" onClick={closeSidebar}>
+                      <Link href="/new" onClick={closeSidebar}>
                         <PencilEditIcon size={14} />
                         <div className="ml-3">New Journal Entry</div>
                       </Link>
