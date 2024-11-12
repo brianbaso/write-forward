@@ -58,3 +58,32 @@ export const getTextFromImage = async (formData: FormData): Promise<any> => {
         throw error;
     }
 }
+
+export const getJournalEntries = async (): Promise<any> => {
+    try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/journal/history`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (response.redirected && response.url.includes('/login')) {
+            throw new Error('Authentication required');
+        }
+
+        if (!response.ok) {
+            throw new Error(`HTTP error status: ${response.status}`);
+        }
+
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+            throw new Error('Invalid response format');
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching journal entries:', error);
+        throw error;
+    }
+}
