@@ -10,14 +10,15 @@ import PrivacySwitch from '@/components/custom/privacy-switch';
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { JOURNAL_PAGE_QUOTES } from '@/constants/Quotes';
-import { createAnalysis, getTextFromImage } from '@/lib/api';
+import { saveJournalEntry, createAndSaveAnalysis, getTextFromImage } from '@/lib/api';
+import { generateUUID } from "@/lib/utils";
 
 import { useAnalysisContext } from '../../context/AnalysisContext';
 
 export default function Home() {
     const [inputText, setInputText] = useState("")
     const [errorMessage, setErrorMessage] = useState("")
-    const [isCreatingAnalysis, setIsCreatingAnalysis] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
     const [isUploadingImage, setIsUploadingImage] = useState(false)
     const [privacyMode, setPrivacyMode] = useState(false)
     const analysisContext = useAnalysisContext();
@@ -26,8 +27,8 @@ export default function Home() {
     const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
     const [randomQuote, setRandomQuote] = useState("");
 
-    const handleSubmit = useCallback(async (text: string) => {
-        if (text.trim() === "") {
+    const handleSubmit = useCallback(async (entryText: string) => {
+        if (entryText.trim() === "") {
             setErrorMessage("Please enter some text before submitting.")
             return
         }
@@ -38,15 +39,18 @@ export default function Home() {
             return
         }
 
-        setIsCreatingAnalysis(true)
+        setIsLoading(true)
+
         try {
-            const analysis = await createAnalysis(text)
-            analysisContext.setAnalysis(analysis.content[0].text)
+            const { journalId } = await saveJournalEntry(entryText);
+            const { analysis } = await createAndSaveAnalysis(entryText, journalId);
+
+            analysisContext.setAnalysis(analysis)
             router.push('/analysis');
         } catch (error) {
             console.error("Error creating analysis:", error)
             setErrorMessage("An error occurred while creating the analysis. Please try again.")
-            setIsCreatingAnalysis(false)
+            setIsLoading(false)
         }
     }, [analysisContext, router]);
 
@@ -101,7 +105,7 @@ export default function Home() {
     return (
         <>
             <div className="flex flex-col items-center min-h-screen bg-gray-900 pt-40">
-                {isCreatingAnalysis ? (
+                {isLoading ? (
                     <div className="text-zinc-200 text-center text-xl font-libre-baskerville bg-gray-800 rounded-lg p-6">
                         Crafting Your Analysis<br />
                         <p className="text-4xl pt-2">🧘🏽‍♂️🪷</p>

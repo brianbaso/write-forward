@@ -5,7 +5,7 @@ import { desc, eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 
-import { user, chat, User } from "./schema";
+import { user, chat, User, journal, analysis } from "./schema";
 
 // Optionally, if not using email/pass login, you can
 // use the Drizzle adapter for Auth.js / NextAuth
@@ -95,6 +95,69 @@ export async function getChatById({ id }: { id: string }) {
     return selectedChat;
   } catch (error) {
     console.error("Failed to get chat by id from database");
+    throw error;
+  }
+}
+
+export async function saveJournalEntry({ id, entryText, userId }: { id: string, entryText: string, userId: string }) {
+  try {
+    return await db.insert(journal).values({ id, createdAt: new Date(), userId, entryText });
+  } catch (error) {
+    console.error("Failed to save journal entry in database");
+    throw error;
+  }
+}
+
+export async function getJournalEntriesByUserId({ id }: { id: string }) {
+  try {
+    return await db.select().from(journal).where(eq(journal.userId, id)).orderBy(desc(journal.createdAt));
+  } catch (error) {
+    console.error("Failed to get journal entries by user from database");
+    throw error;
+  }
+}
+
+export async function updateJournalEntry({ id, entryText }: { id: string, entryText: string }) {
+  try {
+    return await db.update(journal).set({ entryText }).where(eq(journal.id, id));
+  } catch (error) {
+    console.error("Failed to update journal entry in database");
+    throw error;
+  }
+}
+
+export async function deleteJournalEntry({ id }: { id: string }) {
+  try {
+    return await db.delete(journal).where(eq(journal.id, id));
+  } catch (error) {
+    console.error("Failed to delete journal entry in database");
+    throw error;
+  }
+}
+
+export async function saveAnalysis({ id, analysisText, journalId }: { id: string, analysisText: string, journalId: string }) {
+  try {
+    return await db.insert(analysis).values({ id, analysisText, journalId });
+  } catch (error) {
+    console.error("Failed to save analysis in database");
+    throw error;
+  }
+}
+
+export async function updateAnalysis({ id, analysisText }: { id: string, analysisText: string }) {
+  try {
+    return await db.update(analysis).set({ analysisText }).where(eq(analysis.id, id));
+  } catch (error) {
+    console.error("Failed to update analysis in database");
+    throw error;
+  }
+}
+
+export async function getAnalysisByJournalId({ journalId }: { journalId: string }) {
+  try {
+    return await db.select().from(analysis).where(eq(analysis.journalId, journalId));
+  } catch (error) {
+    console.error("Failed to get analysis by journal id from database");
     throw error;
   }
 }

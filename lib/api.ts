@@ -1,11 +1,32 @@
-export const createAnalysis = async (userInput: string): Promise<any> => {
+export const saveJournalEntry = async (entryText: string): Promise<any> => {
+    try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/journal/save`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ entryText }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error status: ${response.status}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error saving journal entry:', error);
+        throw error;
+    }
+}
+
+export const createAndSaveAnalysis = async (journalId: string, entryText: string): Promise<any> => {
     try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/analysis/create`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ userInput }),
+            body: JSON.stringify({ journalId, entryText }),
         });
 
         // try to look at auth middleware for other api routes 
