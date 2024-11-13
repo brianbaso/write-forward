@@ -137,6 +137,7 @@ export async function deleteJournalEntry({ id }: { id: string }) {
 
 export async function saveAnalysis({ id, analysisText, journalId }: { id: string, analysisText: string, journalId: string }) {
   try {
+    console.log(id, analysisText, journalId);
     return await db.insert(analysis).values({ id, analysisText, journalId });
   } catch (error) {
     console.error("Failed to save analysis in database");

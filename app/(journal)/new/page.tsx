@@ -43,7 +43,7 @@ export default function Home() {
 
         try {
             const { journalId } = await saveJournalEntry(entryText);
-            const { analysis } = await createAndSaveAnalysis(entryText, journalId);
+            const { analysis } = await createAndSaveAnalysis(journalId, entryText);
 
             analysisContext.setAnalysis(analysis)
             router.push('/analysis');
