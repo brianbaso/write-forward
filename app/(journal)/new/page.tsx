@@ -11,9 +11,8 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { JOURNAL_PAGE_QUOTES } from '@/constants/Quotes';
 import { saveJournalEntry, createAndSaveAnalysis, getTextFromImage } from '@/lib/api';
-import { generateUUID } from "@/lib/utils";
 
-import { useAnalysisContext } from '../../context/AnalysisContext';
+import { useJournalContext } from '../../context/JournalContext';
 
 export default function Home() {
     const [inputText, setInputText] = useState("")
@@ -21,7 +20,7 @@ export default function Home() {
     const [isLoading, setIsLoading] = useState(false)
     const [isUploadingImage, setIsUploadingImage] = useState(false)
     const [privacyMode, setPrivacyMode] = useState(false)
-    const analysisContext = useAnalysisContext();
+    const analysisContext = useJournalContext();
     const router = useRouter();
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);

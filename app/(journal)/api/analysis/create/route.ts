@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
+
+import { JOURNAL_ANALYSIS_PROMPT } from '@/constants/Prompts';
 import { saveAnalysis } from '@/db/queries';
 import { generateUUID } from "@/lib/utils";
 
-import { JOURNAL_ANALYSIS_PROMPT } from '@/constants/Prompts';
 
 const CLAUDE_API_URL = 'https://api.anthropic.com/v1/messages';
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { saveJournalEntry } from '@/db/queries'
+
 import { auth } from "@/app/(auth)/auth";
+import { saveJournalEntry } from '@/db/queries'
 import { generateUUID } from "@/lib/utils";
 
 export async function POST(req: NextRequest) {

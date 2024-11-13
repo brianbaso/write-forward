@@ -1,6 +1,7 @@
+import { NextRequest } from "next/server";
+
 import { auth } from "@/app/(auth)/auth";
 import { getAnalysisByJournalId } from "@/db/queries";
-import { NextRequest } from "next/server";
 
 export async function GET(req: NextRequest) {
     const session = await auth();

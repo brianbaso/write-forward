@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { Toaster } from "sonner";
 
-import { AnalysisProvider } from "@/app/context/AnalysisContext";
+import { JournalProvider } from "@/app/context/JournalContext";
 import { Navbar } from "@/components/custom/navbar";
 import { ThemeProvider } from "@/components/custom/theme-provider";
 
@@ -23,15 +23,15 @@ export default async function RootLayout({
       <body className="antialiased">
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
-          <AnalysisProvider>
+          <JournalProvider>
             <Toaster position="top-center" />
             <Navbar />
             {children}
-          </AnalysisProvider>
+          </JournalProvider>
         </ThemeProvider>
       </body>
     </html>

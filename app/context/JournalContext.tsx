@@ -2,28 +2,28 @@
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
-interface AnalysisContextType {
+interface JournalContextType {
     analysis: string;
     setAnalysis: (analysis: string) => void;
     entryText: string;
     setEntryText: (text: string) => void;
 }
 
-const AnalysisContext = createContext<AnalysisContextType | undefined>(undefined);
+const JournalContext = createContext<JournalContextType | undefined>(undefined);
 
-export const useAnalysisContext = () => {
-    const context = useContext(AnalysisContext);
+export const useJournalContext = () => {
+    const context = useContext(JournalContext);
     if (context === undefined) {
-        throw new Error('useAnalysisContext must be used within an AnalysisProvider');
+        throw new Error('useJournalContext must be used within an JournalProvider');
     }
     return context;
 };
 
-interface AnalysisProviderProps {
+interface JournalProviderProps {
     children: ReactNode;
 }
 
-export const AnalysisProvider: React.FC<AnalysisProviderProps> = ({ children }) => {
+export const JournalProvider: React.FC<JournalProviderProps> = ({ children }) => {
     const [analysis, setAnalysis] = useState<string>(() => {
         if (typeof window !== 'undefined') {
             return localStorage.getItem('analysis') || '';
@@ -53,13 +53,13 @@ export const AnalysisProvider: React.FC<AnalysisProviderProps> = ({ children }) 
     };
 
     return (
-        <AnalysisContext.Provider value={{
+        <JournalContext.Provider value={{
             analysis,
             setAnalysis: updateAnalysis,
             entryText,
             setEntryText: updateEntryText
         }}>
             {children}
-        </AnalysisContext.Provider>
+        </JournalContext.Provider>
     );
 };

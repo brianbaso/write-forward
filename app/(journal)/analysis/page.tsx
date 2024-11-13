@@ -3,12 +3,12 @@
 import { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown'
 
-import { useAnalysisContext } from '@/app/context/AnalysisContext';
+import { useJournalContext } from '@/app/context/JournalContext';
 
 import '@/app/styles/markdown-styles.css'
 
 export default function Analysis() {
-    const { analysis } = useAnalysisContext();
+    const { analysis } = useJournalContext();
     const [title, setTitle] = useState('Analysis');
     const [content, setContent] = useState('');
 
