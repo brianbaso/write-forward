@@ -5,6 +5,8 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 interface AnalysisContextType {
     analysis: string;
     setAnalysis: (analysis: string) => void;
+    entryText: string;
+    setEntryText: (text: string) => void;
 }
 
 const AnalysisContext = createContext<AnalysisContextType | undefined>(undefined);
@@ -23,23 +25,40 @@ interface AnalysisProviderProps {
 
 export const AnalysisProvider: React.FC<AnalysisProviderProps> = ({ children }) => {
     const [analysis, setAnalysis] = useState<string>(() => {
-        // Try to load analysis from localStorage on initial render
         if (typeof window !== 'undefined') {
             return localStorage.getItem('analysis') || '';
         }
         return '';
     });
 
+    const [entryText, setEntryText] = useState<string>(() => {
+        if (typeof window !== 'undefined') {
+            return localStorage.getItem('entryText') || '';
+        }
+        return '';
+    });
+
     const updateAnalysis = (newAnalysis: string) => {
         setAnalysis(newAnalysis);
-        // Save to localStorage whenever analysis is updated
         if (typeof window !== 'undefined') {
             localStorage.setItem('analysis', newAnalysis);
         }
     };
 
+    const updateEntryText = (newText: string) => {
+        setEntryText(newText);
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('entryText', newText);
+        }
+    };
+
     return (
-        <AnalysisContext.Provider value={{ analysis, setAnalysis: updateAnalysis }}>
+        <AnalysisContext.Provider value={{
+            analysis,
+            setAnalysis: updateAnalysis,
+            entryText,
+            setEntryText: updateEntryText
+        }}>
             {children}
         </AnalysisContext.Provider>
     );

@@ -7,12 +7,15 @@ import useSWR from "swr";
 import { fetcher } from "@/lib/utils";
 import { useBreakpoint } from "@/lib/useBreakpoint";
 import { useRouter } from 'next/navigation';
+import { useAnalysisContext } from "@/app/context/AnalysisContext";
 
 export default function HomePage() {
     const { data: entries, isLoading } = useSWR("/api/journal/history", fetcher, {
         fallbackData: [],
     });
     const isLg = useBreakpoint('lg');
+    const analysisContext = useAnalysisContext();
+    const router = useRouter();
 
     return (
         <div className="flex flex-col items-center min-h-screen bg-gray-900 pt-20">
@@ -42,10 +45,13 @@ export default function HomePage() {
                 </div>
             ) : (
                 entries.map((entry: any) => (
-                    <Link
+                    <div
                         key={entry.id}
-                        href={`/entry/${entry.id}?text=${encodeURIComponent(entry.entryText)}`}
-                        className="w-[90%] md:min-w-[725px] md:w-[50%]"
+                        className="w-[90%] md:min-w-[725px] md:w-[50%] cursor-pointer"
+                        onClick={() => {
+                            analysisContext.setEntryText(entry.entryText);
+                            router.push(`/entry/${entry.id}`);
+                        }}
                     >
                         <Card className="md:h-[100px] bg-zinc-300 border-none hover:bg-zinc-400 transition-colors mb-2">
                             <CardContent className="pt-3">
@@ -59,7 +65,7 @@ export default function HomePage() {
                                 </p>
                             </CardContent>
                         </Card>
-                    </Link>
+                    </div>
                 ))
             )}
         </div>
