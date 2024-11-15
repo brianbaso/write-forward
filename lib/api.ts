@@ -87,3 +87,20 @@ export const getJournalEntries = async (): Promise<any> => {
         throw error;
     }
 }
+
+export const createImage = async (prompt: string): Promise<any> => {
+    try {
+        const response = await fetch('/api/analysis/image', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ prompt }),
+        });
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error creating image:', error)
+        throw error;
+    }
+}

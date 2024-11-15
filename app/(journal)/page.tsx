@@ -10,8 +10,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useBreakpoint } from "@/lib/useBreakpoint";
 import { fetcher } from "@/lib/utils";
 
-
-
 export default function HomePage() {
     const { data: entries, isLoading } = useSWR("/api/journal/history", fetcher, {
         fallbackData: [],
