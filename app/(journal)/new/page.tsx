@@ -3,6 +3,7 @@ import { Loader2 } from "lucide-react";
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect, useCallback } from "react"
+import { useChat } from "ai/react";
 
 import ImageUploadButton from "@/components/custom/image-upload-button";
 import LoadingEllipsis from '@/components/custom/loading-ellipsis';
@@ -11,13 +12,18 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { JOURNAL_PAGE_QUOTES } from '@/constants/Quotes';
 import { saveJournalEntry, createAndSaveAnalysis, getTextFromImage } from '@/lib/api';
+import { Analysis } from "@/components/custom/analysis";
+import { Message as PreviewMessage } from "@/components/custom/message";
+
+import { MultimodalInput } from "@/components/custom/multimodal-input";
+
 
 import { useJournalContext } from '../../context/JournalContext';
 
-export default function Home() {
+export default function New() {
     const [inputText, setInputText] = useState("")
     const [errorMessage, setErrorMessage] = useState("")
-    const [isLoading, setIsLoading] = useState(false)
+    // const [isLoading, setIsLoading] = useState(false)
     const [isUploadingImage, setIsUploadingImage] = useState(false)
     const [privacyMode, setPrivacyMode] = useState(false)
     const analysisContext = useJournalContext();
@@ -25,77 +31,113 @@ export default function Home() {
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
     const [randomQuote, setRandomQuote] = useState("");
+    const [title, setTitle] = useState('');
+    const [content, setContent] = useState('');
+    const [analysis, setAnalysis] = useState('');
+    const [attachments, setAttachments] = useState<Array<Attachment>>([]);
 
-    const handleSubmit = useCallback(async (entryText: string) => {
-        if (entryText.trim() === "") {
-            setErrorMessage("Please enter some text before submitting.")
-            return
-        }
+    const { messages, handleSubmit, input, setInput, append, isLoading, stop } =
+        useChat({
+            // body: { journalId },
+            // initialMessages,
+            onFinish: async () => {
+                const { journalId } = await saveJournalEntry(input);
+                await createAndSaveAnalysis(journalId, input);
+            },
+        });
 
-        if (!analysisContext || !analysisContext.setAnalysis) {
-            console.error("Analysis context not available");
-            setErrorMessage("An error occurred. Please try again later.")
-            return
-        }
+    // useEffect(() => {
+    //     let isMounted = true;
 
-        setIsLoading(true)
+    //     if (analysis) {
+    //         const titleMatch = analysis.match(/^Title: (.+)$/m);
+    //         if (isMounted) {
+    //             setTitle(titleMatch ? titleMatch[1] : 'Analysis');
+    //             setContent(analysis.replace(/^Title: .+\n/, '').trim());
+    //         }
+    //     }
 
-        try {
-            const { journalId } = await saveJournalEntry(entryText);
-            const { analysis } = await createAndSaveAnalysis(journalId, entryText);
+    //     return () => {
+    //         isMounted = false;
+    //     };
+    // }, [analysis]);
 
-            analysisContext.setAnalysis(analysis)
-            router.push('/analysis');
-        } catch (error) {
-            console.error("Error creating analysis:", error)
-            setErrorMessage("An error occurred while creating the analysis. Please try again.")
-            setIsLoading(false)
-        }
-    }, [analysisContext, router]);
+    // useEffect(() => {
+    //     if (messages.length > 1
+    // })
 
-    useEffect(() => {
-        const handleKeyDown = (event: KeyboardEvent) => {
-            if (event.metaKey && event.key === "Enter" && !isUploadingImage) {
-                event.preventDefault();
-                handleSubmit(inputText);
-            }
-        }
+    // const handleSubmit = useCallback(async (entryText: string) => {
+    //     if (entryText.trim() === "") {
+    //         setErrorMessage("Please enter some text before submitting.")
+    //         return
+    //     }
 
-        window.addEventListener("keydown", handleKeyDown)
+    //     // if (!analysisContext || !analysisContext.setAnalysis) {
+    //     //     console.error("Analysis context not available");
+    //     //     setErrorMessage("An error occurred. Please try again later.")
+    //     //     return
+    //     // }
 
-        return () => {
-            window.removeEventListener("keydown", handleKeyDown)
-        }
-    }, [inputText, handleSubmit, isUploadingImage]);
+    //     setIsLoading(true)
 
-    const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (!file) return;
-        setIsUploadingImage(true);
+    //     try {
+    //         const { journalId } = await saveJournalEntry(entryText);
+    //         const { analysis } = await createAndSaveAnalysis(journalId, entryText);
 
-        if (file) {
-            setUploadedFileName(file.name);
-        }
+    //         setAnalysis(analysis)
+    //         setIsLoading(false)
+    //         // analysisContext.setAnalysis(analysis)
+    //         // router.push('/analysis');
+    //     } catch (error) {
+    //         console.error("Error creating analysis:", error)
+    //         setErrorMessage("An error occurred while creating the analysis. Please try again.")
+    //         setIsLoading(false)
+    //     }
+    // }, [analysisContext, router]);
 
-        const previewUrl = URL.createObjectURL(file);
-        setImagePreview(previewUrl);
+    // useEffect(() => {
+    //     const handleKeyDown = (event: KeyboardEvent) => {
+    //         if (event.metaKey && event.key === "Enter" && !isUploadingImage) {
+    //             event.preventDefault();
+    //             handleSubmit(inputText);
+    //         }
+    //     }
 
-        try {
-            const formData = new FormData();
-            formData.append('image', file);
-            const res = await getTextFromImage(formData);
+    //     window.addEventListener("keydown", handleKeyDown)
 
-            if (res?.text) {
-                setInputText(res.text);
-            } else {
-                console.error('Error getting text from image');
-            }
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setIsUploadingImage(false);
-        }
-    };
+    //     return () => {
+    //         window.removeEventListener("keydown", handleKeyDown)
+    //     }
+    // }, [inputText, handleSubmit, isUploadingImage]);
+
+    // const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    //     const file = event.target.files?.[0];
+    //     if (!file) return;
+    //     setIsUploadingImage(true);
+
+    //     if (file) {
+    //         setUploadedFileName(file.name);
+    //     }
+
+    //     const previewUrl = URL.createObjectURL(file);
+    //     setImagePreview(previewUrl);
+
+    //     try {
+    //         const formData = new FormData();
+    //         formData.append('image', file);
+    //         const res = await getTextFromImage(formData);
+
+    //         if (res?.text) {
+    //             setInputText(res.text);
+    //         } else {
+    //             console.error('Error getting text from image');
+    //         }
+    //     } catch (error) {
+    //         console.error(error);
+    //     } finally {
+    //         setIsUploadingImage(false);
+    //     }
+    // };
 
     useEffect(() => {
         setRandomQuote(JOURNAL_PAGE_QUOTES[Math.floor(Math.random() * JOURNAL_PAGE_QUOTES.length)]);
@@ -104,70 +146,83 @@ export default function Home() {
     return (
         <>
             <div className="flex flex-col items-center min-h-screen bg-gray-900 pt-40">
-                {isLoading ? (
-                    <div className="text-zinc-200 text-center text-xl font-libre-baskerville bg-gray-800 rounded-lg p-6">
-                        Crafting Your Analysis<br />
-                        <p className="text-4xl pt-2">🧘🏽‍♂️🪷</p>
-                        Take a deep breath<LoadingEllipsis />
+                <h1 className='w-[90%] md:w-1/2 text-zinc-400 text-md text-center font-libre-baskerville italic pb-4'>
+                    {randomQuote}
+                </h1>
+                {/* {imagePreview ? (
+                    <div className="w-[90%] md:w-1/2  relative bg-gray-800 border-2 border-gray-600 rounded-lg overflow-hidden">
+                        <Image
+                            src={imagePreview || ''}
+                            alt="Uploaded preview"
+                            width={100}
+                            height={140}
+                            className="opacity-70 mx-auto pb-2 pt-3"
+                            style={{ objectFit: 'contain' }}
+                        />
+                        {isUploadingImage && (
+                            <div className="absolute inset-0 flex items-center justify-center">
+                                <Loader2 className="size-8 animate-spin text-blue-500" />
+                            </div>
+                        )}
+                        <div className="text-zinc-400 text-sm text-center pb-2">
+                            {uploadedFileName && (uploadedFileName.length > 20
+                                ? `${uploadedFileName.substring(0, 20)}...`
+                                : uploadedFileName)}
+                        </div>
                     </div>
                 ) : (
-                    <>
-                        <h1 className='w-[90%] md:w-1/2 text-zinc-400 text-md text-center font-libre-baskerville italic pb-4'>
-                            {randomQuote}
-                        </h1>
-                        {imagePreview ? (
-                            <div className="w-[90%] md:w-1/2  relative bg-gray-800 border-2 border-gray-600 rounded-lg overflow-hidden">
-                                <Image
-                                    src={imagePreview || ''}
-                                    alt="Uploaded preview"
-                                    width={100}
-                                    height={140}
-                                    className="opacity-70 mx-auto pb-2 pt-3"
-                                    style={{ objectFit: 'contain' }}
-                                />
-                                {isUploadingImage && (
-                                    <div className="absolute inset-0 flex items-center justify-center">
-                                        <Loader2 className="size-8 animate-spin text-blue-500" />
-                                    </div>
-                                )}
-                                <div className="text-zinc-400 text-sm text-center pb-2">
-                                    {uploadedFileName && (uploadedFileName.length > 20
-                                        ? `${uploadedFileName.substring(0, 20)}...`
-                                        : uploadedFileName)}
-                                </div>
-                            </div>
-                        ) : (
-                            <Textarea
-                                className={`w-[90%] md:w-1/2 h-[35vh] md:h-[20vh] bg-gray-800 border-2 border-gray-600 text-md rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${privacyMode ? 'text-zinc-600 placeholder:text-zinc-600' : 'text-zinc-200 placeholder:text-zinc-500'
-                                    }`}
-                                placeholder="Write a journal entry..."
-                                value={inputText}
-                                onChange={(e) => {
-                                    setInputText(e.target.value)
-                                    setErrorMessage("")
-                                }}
-                                id="journal-textarea"
-                            />
-                        )}
-                        {errorMessage && (
-                            <div className="w-1/2 text-red-500 mt-2">{errorMessage}</div>
-                        )}
-                        <div className="w-[90%] md:w-1/2 flex justify-between items-center pt-2">
-                            <div className="flex items-center">
-                                <PrivacySwitch privacyMode={privacyMode} setPrivacyMode={setPrivacyMode} />
-                            </div>
-                            <div className="flex space-x-2">
-                                <ImageUploadButton handleFileChange={handleFileChange} />
-                                <Button
-                                    variant="journal"
-                                    onClick={() => handleSubmit(inputText)}
-                                    disabled={isUploadingImage}
-                                >
-                                    ⌘ + ↵ Submit
-                                </Button>
-                            </div>
-                        </div>
-                    </>
+                    <Textarea
+                        className={`w-[90%] md:w-1/2 h-[35vh] md:h-[20vh] bg-gray-800 border-2 border-gray-600 text-md rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${privacyMode ? 'text-zinc-600 placeholder:text-zinc-600' : 'text-zinc-200 placeholder:text-zinc-500'
+                            }`}
+                        placeholder="Write a journal entry..."
+                        value={inputText}
+                        onChange={(e) => {
+                            setInputText(e.target.value)
+                            setErrorMessage("")
+                        }}
+                        id="journal-textarea"
+                    />
+                )}
+                {errorMessage && (
+                    <div className="w-1/2 text-red-500 mt-2">{errorMessage}</div>
+                )}
+                <div className="w-[90%] md:w-1/2 flex justify-between items-center pt-2">
+                    <div className="flex items-center">
+                        <PrivacySwitch privacyMode={privacyMode} setPrivacyMode={setPrivacyMode} />
+                    </div>
+                    <div className="flex space-x-2">
+                        <ImageUploadButton handleFileChange={handleFileChange} />
+                        <Button
+                            variant="journal"
+                            onClick={() => handleSubmit(inputText)}
+                            disabled={isUploadingImage}
+                        >
+                            ⌘ + ↵ Submit
+                        </Button>
+                    </div>
+                </div> */}
+                <form className="w-[90%] md:w-1/2 md:px-0">
+                    <MultimodalInput
+                        input={input}
+                        setInput={setInput}
+                        handleSubmit={handleSubmit}
+                        isLoading={isLoading}
+                        stop={stop}
+                        attachments={attachments}
+                        setAttachments={setAttachments}
+                        messages={messages}
+                        append={append}
+                        isChatPage={false}
+                    />
+                </form>
+
+                {messages.length > 1 && (
+                    <div className="w-[90%] md:w-1/2 flex flex-col items-center pt-6">
+                        <h1 className="text-zinc-400 text-md text-center font-libre-baskerville italic pb-4">Analysis</h1>
+                        <Analysis
+                            content={messages[1].content}
+                        />
+                    </div>
                 )}
             </div >
         </>

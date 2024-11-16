@@ -3,14 +3,12 @@ import { z } from "zod";
 
 import { customModel } from "@/ai";
 import { auth } from "@/app/(auth)/auth";
-import { CHAT_SYSTEM_PROMPT } from "@/constants/Prompts";
+import { CHAT_SYSTEM_PROMPT, JOURNAL_ANALYSIS_PROMPT } from "@/constants/Prompts";
 import { deleteChatById, getChatById, saveChat } from "@/db/queries";
-
 
 export async function POST(request: Request) {
   const { id, messages }: { id: string; messages: Array<Message> } =
     await request.json();
-
   const session = await auth();
 
   if (!session) {
@@ -19,31 +17,43 @@ export async function POST(request: Request) {
 
   const coreMessages = convertToCoreMessages(messages);
 
-  const result = await streamText({
+  // Extract common streamText options
+  const baseStreamOptions = {
     model: customModel,
-    system: CHAT_SYSTEM_PROMPT,
-    messages: coreMessages,
-    maxSteps: 5,
-    onFinish: async ({ responseMessages }) => {
-      if (session.user && session.user.id) {
-        try {
-          await saveChat({
-            id,
-            messages: [...coreMessages, ...responseMessages],
-            userId: session.user.id,
-          });
-        } catch (error) {
-          console.error("Failed to save chat");
-        }
-      }
-    },
     experimental_telemetry: {
       isEnabled: true,
       functionId: "stream-text",
     },
-  });
+  };
 
-  return result.toDataStreamResponse({});
+  try {
+    const result = await streamText({
+      ...baseStreamOptions,
+      system: id ? CHAT_SYSTEM_PROMPT : JOURNAL_ANALYSIS_PROMPT,
+      messages: coreMessages,
+      ...(id && {
+        maxSteps: 5,
+        onFinish: async ({ responseMessages }) => {
+          if (session.user?.id) {
+            try {
+              await saveChat({
+                id,
+                messages: [...coreMessages, ...responseMessages],
+                userId: session.user.id,
+              });
+            } catch (error) {
+              console.error("Failed to save chat:", error);
+            }
+          }
+        },
+      }),
+    });
+
+    return result.toDataStreamResponse({});
+  } catch (error) {
+    console.error("Stream processing failed:", error);
+    return new Response("Failed to process stream", { status: 500 });
+  }
 }
 
 export async function DELETE(request: Request) {
