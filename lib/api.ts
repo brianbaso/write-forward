@@ -19,27 +19,26 @@ export const saveJournalEntry = async (entryText: string): Promise<any> => {
     }
 }
 
-export const createAndSaveAnalysis = async (journalId: string, entryText: string): Promise<any> => {
+export const saveAnalysis = async (journalId: string, analysisText: string): Promise<any> => {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/analysis/create`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/analysis/save`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ journalId, entryText }),
+            body: JSON.stringify({ journalId, analysisText }),
         });
 
-        // try to look at auth middleware for other api routes 
         if (!response.ok) {
             throw new Error(`HTTP error status: ${response.status}`);
         }
 
         return await response.json();
     } catch (error) {
-        console.error('Error creating analysis:', error);
+        console.error('Error saving analysis:', error);
         throw error;
     }
-};
+}
 
 export const getTextFromImage = async (formData: FormData): Promise<any> => {
     try {
@@ -84,6 +83,25 @@ export const getJournalEntries = async (): Promise<any> => {
         return await response.json();
     } catch (error) {
         console.error('Error fetching journal entries:', error);
+        throw error;
+    }
+}
+
+export const getJournalAndAnalysis = async (id: string): Promise<any> => {
+    try {
+        if (!id) {
+            throw new Error('Journal ID is required');
+        }
+
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/journal/${id}`);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error status: ${response.status}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching journal and analysis:', error);
         throw error;
     }
 }

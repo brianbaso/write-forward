@@ -1,6 +1,7 @@
 "use client";
 
 import { Attachment, ChatRequestOptions, CreateMessage, Message } from "ai";
+import { is } from "drizzle-orm";
 import { motion } from "framer-motion";
 import React, {
   useRef,
@@ -11,6 +12,7 @@ import React, {
   SetStateAction,
   ChangeEvent,
 } from "react";
+import { LuSend } from "react-icons/lu";
 import { toast } from "sonner";
 
 import { ArrowUpIcon, PaperclipIcon, StopIcon } from "./icons";
@@ -42,6 +44,7 @@ export function MultimodalInput({
   messages,
   append,
   handleSubmit,
+  isChatPage
 }: {
   input: string;
   setInput: (value: string) => void;
@@ -60,22 +63,23 @@ export function MultimodalInput({
     },
     chatRequestOptions?: ChatRequestOptions,
   ) => void;
+  isChatPage: boolean;
 }) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { width } = useWindowSize();
+
+  const adjustHeight = () => {
+    if (isChatPage && textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight + 2}px`;
+    }
+  };
 
   useEffect(() => {
     if (textareaRef.current) {
       adjustHeight();
     }
-  }, []);
-
-  const adjustHeight = () => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight + 2}px`;
-    }
-  };
+  });
 
   const handleInput = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(event.target.value);
@@ -153,7 +157,7 @@ export function MultimodalInput({
 
   return (
     <div className="relative w-full flex flex-col gap-4">
-      {messages.length === 0 &&
+      {isChatPage && messages.length === 0 &&
         attachments.length === 0 &&
         uploadQueue.length === 0 && (
           <div className="grid sm:grid-cols-2 gap-2 w-full md:px-0 mx-auto md:max-w-[500px]">
@@ -216,10 +220,10 @@ export function MultimodalInput({
 
       <Textarea
         ref={textareaRef}
-        placeholder="Send a message..."
+        placeholder={`${isChatPage ? "Send a message..." : "Write your journal entry..."}`}
         value={input}
         onChange={handleInput}
-        className="min-h-[24px] overflow-hidden resize-none rounded-lg text-base bg-gray-800"
+        className={`min-h-[24px] overflow-hidden resize-none rounded-lg text-base bg-gray-800 ${!isChatPage ? "md:h-[20vh] h-[35vh]" : ""}`}
         rows={3}
         id="chat-textarea"
         onKeyDown={(event) => {

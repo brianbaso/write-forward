@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import { Toaster } from "sonner";
 
-import { JournalProvider } from "@/app/context/JournalContext";
 import { Navbar } from "@/components/custom/navbar";
 import { ThemeProvider } from "@/components/custom/theme-provider";
 
@@ -27,11 +26,9 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <JournalProvider>
-            <Toaster position="top-center" />
-            <Navbar />
-            {children}
-          </JournalProvider>
+          <Toaster position="top-center" />
+          <Navbar />
+          {children}
         </ThemeProvider>
       </body>
     </html>

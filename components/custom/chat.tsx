@@ -66,6 +66,7 @@ export function Chat({
             setAttachments={setAttachments}
             messages={messages}
             append={append}
+            isChatPage={true}
           />
         </form>
       </div>

@@ -137,7 +137,6 @@ export async function deleteJournalEntry({ id }: { id: string }) {
 
 export async function saveAnalysis({ id, analysisText, journalId }: { id: string, analysisText: string, journalId: string }) {
   try {
-    console.log(id, analysisText, journalId);
     return await db.insert(analysis).values({ id, analysisText, journalId });
   } catch (error) {
     console.error("Failed to save analysis in database");
@@ -153,6 +152,16 @@ export async function updateAnalysis({ id, analysisText }: { id: string, analysi
     throw error;
   }
 }
+
+export async function getJournalAndAnalysisByJournalId({ id }: { id: string }) {
+  try {
+    return await db.select().from(journal).leftJoin(analysis, eq(journal.id, analysis.journalId)).where(eq(journal.id, id));
+  } catch (error) {
+    console.error("Failed to get journal and analysis by journal id from database");
+    throw error;
+  }
+}
+
 
 export async function getAnalysisByJournalId({ journalId }: { journalId: string }) {
   try {
