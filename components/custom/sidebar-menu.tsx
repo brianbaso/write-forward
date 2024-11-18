@@ -21,6 +21,7 @@ import {
   PencilEditIcon,
   TrashIcon,
 } from "./icons";
+import { IoHomeOutline } from "react-icons/io5";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -51,6 +52,7 @@ export const SidebarMenu = ({ user }: { user: User | undefined }) => {
   const pathname = usePathname();
   const isChatPage = pathname.startsWith('/chat');
   const isAnalysisPage = pathname.startsWith('/analysis');
+  const isHomePage = pathname === '/';
 
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
   const {
@@ -131,6 +133,15 @@ export const SidebarMenu = ({ user }: { user: User | undefined }) => {
           {isChatPage ? (
             <div className="flex flex-col h-full mt-6">
               <div className="mt-auto flex flex-col gap-2 pb-10 pt-2">
+                <Button
+                  className="font-medium bg-zinc-200 dark:bg-zinc-300 text-sm flex justify-start flex-row"
+                  asChild
+                >
+                  <Link href="/" onClick={closeSidebar}>
+                    <IoHomeOutline size={20} />
+                    <div className="ml-1.5">Home</div>
+                  </Link>
+                </Button>
                 <Button
                   className="font-medium bg-zinc-200 dark:bg-zinc-300 text-sm flex justify-start flex-row"
                   asChild
@@ -248,6 +259,18 @@ export const SidebarMenu = ({ user }: { user: User | undefined }) => {
             <div className="flex flex-col mt-6">
               {user && (
                 <div className="mt-auto flex flex-col gap-2 pb-10 pt-2">
+                  {!isHomePage && (
+                    <Button
+                      className="font-medium bg-zinc-200 dark:bg-zinc-300 text-sm flex justify-start flex-row"
+                      asChild
+                    >
+                      <Link href="/" onClick={closeSidebar}>
+                        <IoHomeOutline size={20} />
+                        <div className="ml-1.5">Home</div>
+                      </Link>
+                    </Button>
+                  )}
+
                   {isAnalysisPage ? (
                     <Button
                       className="font-medium bg-zinc-200 dark:bg-zinc-300 text-sm flex justify-start flex-row"
