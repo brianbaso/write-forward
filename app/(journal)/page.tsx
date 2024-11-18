@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
 import useSWR from "swr";
@@ -8,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useBreakpoint } from "@/lib/useBreakpoint";
 import { fetcher } from "@/lib/utils";
-import Image from "next/image";
 import Cat from "@/public/images/cat.png";
 
 export default function HomePage() {

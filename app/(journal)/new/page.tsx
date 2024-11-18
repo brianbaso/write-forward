@@ -1,14 +1,14 @@
 "use client"
 
-import { useState, useEffect, useMemo } from "react"
-import { useChat } from "ai/react";
 import { Attachment, ChatRequestOptions } from 'ai';
+import { useChat } from "ai/react";
+import { useState, useEffect, useMemo } from "react"
 
-import { JOURNAL_PAGE_QUOTES } from '@/constants/Quotes';
-import { saveJournalEntry, saveAnalysis, getTextFromImage } from '@/lib/api';
 import { Analysis } from "@/components/custom/analysis";
 import { MultimodalInput } from "@/components/custom/multimodal-input";
 import { StreamingTextIndicator } from "@/components/custom/streaming-loader";
+import { JOURNAL_PAGE_QUOTES } from '@/constants/Quotes';
+import { saveJournalEntry, saveAnalysis, getTextFromImage } from '@/lib/api';
 import { sanitizeText } from "@/lib/utils";
 
 export default function New() {

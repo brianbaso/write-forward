@@ -1,6 +1,7 @@
 "use client";
 
 import { Attachment, ChatRequestOptions, CreateMessage, Message } from "ai";
+import { is } from "drizzle-orm";
 import { motion } from "framer-motion";
 import React, {
   useRef,
@@ -11,6 +12,7 @@ import React, {
   SetStateAction,
   ChangeEvent,
 } from "react";
+import { LuSend } from "react-icons/lu";
 import { toast } from "sonner";
 
 import { ArrowUpIcon, PaperclipIcon, StopIcon } from "./icons";
@@ -18,8 +20,6 @@ import { PreviewAttachment } from "./preview-attachment";
 import useWindowSize from "./use-window-size";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
-import { LuSend } from "react-icons/lu";
-import { is } from "drizzle-orm";
 
 const suggestedActions = [
   {
@@ -68,18 +68,18 @@ export function MultimodalInput({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { width } = useWindowSize();
 
-  useEffect(() => {
-    if (textareaRef.current) {
-      adjustHeight();
-    }
-  }, []);
-
   const adjustHeight = () => {
     if (isChatPage && textareaRef.current) {
       textareaRef.current.style.height = "auto";
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight + 2}px`;
     }
   };
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      adjustHeight();
+    }
+  });
 
   const handleInput = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(event.target.value);
