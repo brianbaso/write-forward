@@ -14,7 +14,7 @@ export default function EntryPage() {
     const params = useParams();
     const id = params.id as string;
 
-    const { data, error } = useSWR(`/api/journal/${id}`, async () => {
+    const { data, error, isLoading } = useSWR(`/api/journal/${id}`, async () => {
         const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/journal/${id}`);
         if (!response.ok) throw new Error('Failed to fetch journal and analysis');
         return response.json();
@@ -27,9 +27,23 @@ export default function EntryPage() {
         <div className="flex flex-col items-center min-h-screen bg-gray-900 pt-24 md:pt-40">
             <div className="w-[90%] md:w-1/2 text-zinc-300 bg-gray-800 rounded-lg px-8 pt-8 mb-4">
                 <h1 className="text-2xl font-bold text-center pb-5 font-libre-baskerville">Journal Entry</h1>
-                <div className="whitespace-pre-wrap mb-4">
-                    {data?.Journal && data.Journal.entryText}
-                </div>
+
+                {isLoading ? (
+                    <div className="space-y-3 mb-4">
+                        <div className="h-4 bg-gray-700 rounded animate-pulse"></div>
+                        <div className="h-4 bg-gray-700 rounded animate-pulse"></div>
+                        <div className="h-4 bg-gray-700 rounded animate-pulse"></div>
+                        <div className="h-4 bg-gray-700 rounded animate-pulse"></div>
+                        <div className="h-4 bg-gray-700 rounded animate-pulse"></div>
+                        <div className="h-4 bg-gray-700 rounded animate-pulse"></div>
+                        <div className="h-4 bg-gray-700 rounded animate-pulse"></div>
+                        <div className="h-4 bg-gray-700 rounded animate-pulse w-3/4"></div>
+                    </div>
+                ) : (
+                    <div className="whitespace-pre-wrap mb-4">
+                        {data?.Journal && data.Journal.entryText}
+                    </div>
+                )}
 
                 <Accordion type="single" collapsible className="w-full mb-4">
                     <AccordionItem value="analysis">

@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import { getJournalAndAnalysisByJournalId } from '@/db/queries';
 
 export async function GET(
+    request: Request,
     { params }: { params: { id: string } }
 ) {
     try {

@@ -85,3 +85,11 @@ export function getTitleFromChat(chat: Chat) {
 
   return firstMessage.content;
 }
+
+export function sanitizeText(text: string) {
+  // Replace invalid UTF-8 characters with their closest valid equivalents
+  return text
+    .replace(/[\uFFFD\uFFFE\uFFFF]/g, '') // Remove replacement characters and invalid UTF-8
+    .normalize('NFKD') // Normalize to decomposed form
+    .replace(/[\u0300-\u036f]/g, ''); // Remove combining diacritical marks
+};

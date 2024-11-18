@@ -4,11 +4,14 @@ import { motion } from "framer-motion";
 import { ReactNode } from "react";
 
 import { Markdown } from "./markdown";
+import { StreamingTextIndicator } from "./streaming-loader";
 
 export const Analysis = ({
   content,
+  isLoading,
 }: {
   content: string | ReactNode;
+  isLoading: boolean;
 }) => {
   return (
     <motion.div
@@ -20,6 +23,7 @@ export const Analysis = ({
         {content && (
           <div className="text-zinc-800 dark:text-zinc-300 flex flex-col gap-4">
             <Markdown>{content as string}</Markdown>
+            <StreamingTextIndicator isVisible={isLoading} />
           </div>
         )}
       </div>
