@@ -1,5 +1,4 @@
 import { convertToCoreMessages, Message, streamText } from "ai";
-import { z } from "zod";
 
 import { customModel } from "@/ai";
 import { auth } from "@/app/(auth)/auth";
@@ -17,7 +16,6 @@ export async function POST(request: Request) {
 
   const coreMessages = convertToCoreMessages(messages);
 
-  // Extract common streamText options
   const baseStreamOptions = {
     model: customModel,
     experimental_telemetry: {

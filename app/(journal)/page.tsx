@@ -3,7 +3,6 @@ import Link from "next/link";
 import { useRouter } from 'next/navigation';
 import useSWR from "swr";
 
-import { useJournalContext } from "@/app/context/JournalContext";
 import { PencilEditIcon } from "@/components/custom/icons";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -15,7 +14,6 @@ export default function HomePage() {
         fallbackData: [],
     });
     const isLg = useBreakpoint('lg');
-    const journalProvider = useJournalContext();
     const router = useRouter();
 
     return (
@@ -49,7 +47,6 @@ export default function HomePage() {
                         key={entry.id}
                         className="w-[90%] md:min-w-[725px] md:w-1/2 cursor-pointer"
                         onClick={() => {
-                            journalProvider.setEntryText(entry.entryText);
                             router.push(`/entry/${entry.id}`);
                         }}
                     >

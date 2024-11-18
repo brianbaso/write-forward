@@ -154,6 +154,16 @@ export async function updateAnalysis({ id, analysisText }: { id: string, analysi
   }
 }
 
+export async function getJournalAndAnalysisByJournalId({ id }: { id: string }) {
+  try {
+    return await db.select().from(journal).leftJoin(analysis, eq(journal.id, analysis.journalId)).where(eq(journal.id, id));
+  } catch (error) {
+    console.error("Failed to get journal and analysis by journal id from database");
+    throw error;
+  }
+}
+
+
 export async function getAnalysisByJournalId({ journalId }: { journalId: string }) {
   try {
     return await db.select().from(analysis).where(eq(analysis.journalId, journalId));
