@@ -8,7 +8,7 @@ import { User } from "next-auth";
 import { useEffect, useState } from "react";
 import { BiSidebar as MenuIcon } from "react-icons/bi";
 import { IoIosJournal } from "react-icons/io";
-import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
+import { IoChatbubbleEllipsesOutline , IoHomeOutline } from "react-icons/io5";
 import { toast } from "sonner";
 import useSWR from "swr";
 
@@ -21,7 +21,6 @@ import {
   PencilEditIcon,
   TrashIcon,
 } from "./icons";
-import { IoHomeOutline } from "react-icons/io5";
 import {
   AlertDialog,
   AlertDialogAction,
