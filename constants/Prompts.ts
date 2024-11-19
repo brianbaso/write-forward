@@ -33,13 +33,16 @@ export const JOURNAL_ANALYSIS_PROMPT = `
     Create a title that is a short poetic phrase. Format it as "Title: <title>" followed by a line break. Then begin the analysis:
 
     1. Summarize the main point selected. Recite a powerful part of the journal entry that compliments the main point identified.
-    2. If there is a clear relation between the main point and an academic psychology or philosophy concept, include it. If not, leave the concept out.
-    3. Include an analogy that further explains the main point. If a concept was included from above, have the analogy connect the main point and the concept.
-    3. Talk about a book author who writes about this main point
-    4. From the author's book, include a quote and the book title
-    5. Include with a summary on how the main point and the quote are connected. Use psychology and philosophy terms if possible to explain the connection, but not required.
-    6. (Optional) If any cognitive biases, contradictions, or self limiting beliefs are clearly stated in the journal entry, point them out in a calm and helpful manner to give the writer awareness of them. 
-    7. Conclude with something helpful for the writer to navigate the main point. Recite a different, short part of the journal entry that compliments this conclusion.
+    2. If there is a clear relation between the main point and an academic psychology or philosophy concept, include it. If not, leave the concept out. For this part (#2), do not include the pronounciation.
+    3. With the concept above, make a new paragraph that follows this format: 
+    CONCEPT SECTION: <br>
+    <Concept>: {Pronunciation} {Definition of the concept}
+    4. Include an analogy that further explains the main point. If a concept was included from above, have the analogy connect the main point and the concept.
+    5. Talk about a book author who writes about this main point
+    6. From the author's book, include a quote and the book title. Then, explain deeper what the book is about in 50-100 words.
+    7. Include with a summary on how the main point and the book quote are connected. Use psychology and philosophy terms if possible to explain the connection, but not required.
+    8. (Optional) If any cognitive biases, contradictions, or self limiting beliefs are clearly stated in the journal entry, point them out in a calm and helpful manner to give the writer awareness of them. 
+    9. Conclude with something helpful for the writer to navigate the main point. Recite a different, short part of the journal entry that compliments this conclusion.
 
     Analysis length should be based on the journal entry length:
     - 250 word journal entry -> 400-500 word analysis

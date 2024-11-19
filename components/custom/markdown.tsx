@@ -2,8 +2,10 @@ import Link from "next/link";
 import React, { memo } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import DefinitionBlock from "./definition-block";
 
 const NonMemoizedMarkdown = ({ children }: { children: string }) => {
+  console.log(children);
   const components = {
     code: ({ node, inline, className, children, ...props }: any) => {
       const match = /language-(\w+)/.exec(className || "");
@@ -62,6 +64,20 @@ const NonMemoizedMarkdown = ({ children }: { children: string }) => {
           {children}
         </Link>
       );
+    },
+    p: ({ node, children, ...props }: any) => {
+      if (Array.isArray(children) &&
+        typeof children[0] === 'string' &&
+        children[0].startsWith('CONCEPT SECTION:')) {
+        return (
+          <p className="bg-white dark:bg-gray-800 p-4 rounded-lg my-4 shadow-sm" {...props}>
+            {children[0].replace('CONCEPT SECTION:', '').trim()}
+            <DefinitionBlock text={children.slice(2).join('')} />
+          </p>
+        );
+      }
+
+      return <p {...props}>{children}</p>;
     },
   };
 

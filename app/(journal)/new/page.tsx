@@ -97,10 +97,7 @@ export default function New() {
                         </div>
                     ) : (
                         <div className="w-[90%] md:w-1/2 flex flex-col items-center mt-10 mb-16 animate-fade-in">
-                            <h1 className="text-zinc-400 text-xl text-center font-libre-baskerville italic pb-4">
-                                {parsedAnalysis.title}
-                            </h1>
-                            <Analysis content={parsedAnalysis.content} isLoading={isLoading} />
+                            <Analysis title={parsedAnalysis.title} content={parsedAnalysis.content} isLoading={isLoading} />
                         </div>
                     )}
                 </div>
