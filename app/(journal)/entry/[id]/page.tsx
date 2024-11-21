@@ -3,6 +3,7 @@
 import { useParams } from 'next/navigation';
 import useSWR from 'swr';
 
+import { Analysis } from "@/components/custom/analysis";
 import {
     Accordion,
     AccordionContent,
@@ -23,9 +24,20 @@ export default function EntryPage() {
         revalidateOnReconnect: false
     });
 
+    const parseAnalysisContent = (content: string) => {
+        const titleMatch = content.match(/^Title: (.+)$/m);
+        const titleIndex = content.indexOf('Title:');
+        const nextLineIndex = content.indexOf('\n', titleIndex);
+
+        return {
+            title: titleMatch?.[1] || 'Analysis',
+            content: nextLineIndex > -1 ? content.slice(nextLineIndex + 1).trim() : content
+        };
+    };
+
     return (
         <div className="flex flex-col items-center min-h-screen bg-gray-900 pt-24 md:pt-40">
-            <div className="w-[90%] md:w-1/2 text-zinc-300 bg-gray-800 rounded-lg px-8 pt-8 mb-4">
+            <div className="w-[90%] lg:w-1/2 text-zinc-300 bg-gray-800 rounded-lg px-8 pt-8 mb-4">
                 <h1 className="text-2xl font-bold text-center pb-5 font-libre-baskerville">Journal Entry</h1>
 
                 {isLoading ? (
@@ -58,12 +70,11 @@ export default function EntryPage() {
                             ) : !data?.Analysis ? (
                                 <p>Loading analysis...</p>
                             ) : (
-                                <div className="whitespace-pre-wrap text-base">
-                                    <h1 className="text-xl font-bold text-center pt-3 pb-5 font-libre-baskerville">
-                                        {data.Analysis.analysisText.match(/^Title: (.+)$/m)?.[1] || 'Analysis'}
-                                    </h1>
-                                    {data.Analysis.analysisText.replace(/^Title: .+\n/, '').trim()}
-                                </div>
+                                <Analysis
+                                    title={parseAnalysisContent(data.Analysis.analysisText).title}
+                                    content={parseAnalysisContent(data.Analysis.analysisText).content}
+                                    isLoading={false}
+                                />
                             )}
                         </AccordionContent>
                     </AccordionItem>

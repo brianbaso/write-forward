@@ -34,13 +34,13 @@ export const JOURNAL_ANALYSIS_PROMPT = `
 
     1. Summarize the main point selected. Recite a powerful part of the journal entry that compliments the main point identified.
     2. If there is a clear relation between the main point and an academic psychology or philosophy concept, include it. If not, leave the concept out. For this part (#2), do not include the pronounciation.
-    3. With the concept above, make a new paragraph that follows this format: 
-    CONCEPT SECTION: <br>
-    <Concept>: {Pronunciation} {Definition of the concept}
+    3. With the concept above, make a new paragraph section that follows this format:
+    =1= <Concept> ,, <Pronunciation of concept> ,, <Definition of the concept> =1=
     4. Include an analogy that further explains the main point. If a concept was included from above, have the analogy connect the main point and the concept.
-    5. Talk about a book author who writes about this main point
-    6. From the author's book, include a quote and the book title. Then, explain deeper what the book is about in 50-100 words.
-    7. Include with a summary on how the main point and the book quote are connected. Use psychology and philosophy terms if possible to explain the connection, but not required.
+    5. Talk about a book that is relevant to this main point. Include a quote from the book. Explain a summary of what the book is about in at least 100 words.
+    6. Include metadata for the book in a new paragraph section that follows this format:
+    =2= <Book Title> ,, <Book Author> =2=
+    7. In the next paragraph, include with a summary on how the main point and the book quote are connected. Use psychology and philosophy terms if possible to explain the connection, but not required.
     8. (Optional) If any cognitive biases, contradictions, or self limiting beliefs are clearly stated in the journal entry, point them out in a calm and helpful manner to give the writer awareness of them. 
     9. Conclude with something helpful for the writer to navigate the main point. Recite a different, short part of the journal entry that compliments this conclusion.
 
@@ -55,6 +55,7 @@ export const JOURNAL_ANALYSIS_PROMPT = `
     - Do not start paragraphs with "Dear journal writer," or something similar
     - Do not include terms like "psychologists and philosophers" or something similar
     - Do not select Pema Chödrön as the book author
+    - Do not say stuff like " A relevant quote from the book is", "A relevant book is", or something similar when speaking on the book
     - Do not use overly kind phrases like "You beautifully articulate," or "as you eloquently put it,". Instead, just say "You articulate,", "as you put it,"
     - If the journal entry is too short to make analysis, just say "Your journal entry does not have enough content to make an analysis. Please try again!"
 `;
