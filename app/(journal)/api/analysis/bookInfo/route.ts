@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 
 const GOOGLE_BOOKS_API_KEY = process.env.GOOGLE_BOOKS_API_KEY
-const GOOGLE_BOOKS_API_URL = 'https://www.googleapis.com/books/v1/volumes'
+const GOOGLE_BOOKS_API_URL = process.env.GOOGLE_BOOKS_API_URL
 
 export async function GET(request: Request) {
     try {
