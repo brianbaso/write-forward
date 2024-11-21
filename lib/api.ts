@@ -122,3 +122,13 @@ export const createImage = async (prompt: string): Promise<any> => {
         throw error;
     }
 }
+
+export const getBookInfo = async (title: string, author: string): Promise<any> => {
+    try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/analysis/bookInfo?title=${title}&author=${author}`);
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching book info:', error);
+        throw error;
+    }
+}

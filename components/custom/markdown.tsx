@@ -4,9 +4,9 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 import DefinitionBlock from "./definition-block";
+import BookBlock from "./book-block";
 
 const NonMemoizedMarkdown = ({ children }: { children: string }) => {
-  console.log(children);
   const components = {
     code: ({ node, inline, className, children, ...props }: any) => {
       const match = /language-(\w+)/.exec(className || "");
@@ -67,17 +67,32 @@ const NonMemoizedMarkdown = ({ children }: { children: string }) => {
       );
     },
     p: ({ node, children, ...props }: any) => {
-      if (Array.isArray(children) &&
-        typeof children[0] === 'string' &&
-        children[0].startsWith('CONCEPT SECTION:')) {
-        return (
-          <p className="bg-white dark:bg-gray-800 p-4 rounded-lg my-4 shadow-sm" {...props}>
-            {children[0].replace('CONCEPT SECTION:', '').trim()}
-            <DefinitionBlock text={children.slice(2).join('')} />
-          </p>
-        );
+      if (typeof children !== 'string') {
+        return <p {...props}>{children}</p>;
       }
 
+      // Define our special blocks with their markers and components
+      const specialBlocks = [
+        { marker: '1', Component: DefinitionBlock },
+        { marker: '2', Component: BookBlock },
+      ];
+
+      // Check each special block type
+      for (const { marker, Component } of specialBlocks) {
+        const pattern = `=${marker}=(.*?)=${marker}=`;
+        const match = children.match(new RegExp(pattern, 's'));
+
+        if (match) {
+          const content = match[1].trim();
+          return (
+            <div className="bg-white dark:bg-gray-800 p-4 rounded-lg my-4 shadow-sm">
+              <Component text={content} />
+            </div>
+          );
+        }
+      }
+
+      // If no special blocks found, render as normal paragraph
       return <p {...props}>{children}</p>;
     },
   };

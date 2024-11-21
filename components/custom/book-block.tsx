@@ -1,33 +1,40 @@
 import React from 'react';
+import { getBookInfo } from '@/lib/api';
 
-const DefinitionBlock = ({ text }: { text: string }) => {
+const BookBlock = async ({ text }: { text: string }) => {
     if (!text) {
         return null;
     }
 
-    const [concept, pronunciation, definition] = text.split(',,').map(part => part.trim());
+    const [title, author] = text.split(',,').map(part => part.trim());
+
+    try {
+        const bookInfo = await getBookInfo(title, author);
+        console.log(bookInfo);
+
+    } catch (error) {
+        console.error('Error fetching book info:', error);
+    }
+
 
     return (
         <div className="max-w-xl ml-2 md:ml-6 p-2">
             {/* Word */}
             <h1 className="text-2xl mb-2 font-normal font-georgia">
-                {concept?.toLowerCase() || ''}
+                Books
             </h1>
 
             {/* Pronunciation */}
             <div className="mb-2 text-gray-400 font-georgia">
-                <span>[{pronunciation}] </span>
-                <span className="italic">noun.</span>
+                Books
             </div>
 
             {/* Definition */}
             <div className="text-md leading-relaxed font-serif">
-                <p className="mb-1">
-                    {definition}
-                </p>
+                Books
             </div>
         </div>
     );
 };
 
-export default DefinitionBlock;
+export default BookBlock;
