@@ -50,7 +50,6 @@ const BookBlock = ({ text }: { text: string }) => {
                                 width={120}
                                 height={192}
                                 className="mb-2"
-
                             />
                         )}
                         {/* Book Data */}
