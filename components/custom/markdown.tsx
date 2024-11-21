@@ -3,11 +3,11 @@ import React, { memo } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
-import DefinitionBlock from "./definition-block";
 import BookBlock from "./book-block";
+import DefinitionBlock from "./definition-block";
 
-const NonMemoizedMarkdown = ({ children }: { children: string }) => {
-  const components = {
+const createMarkdownComponents = (specialBlocks: Array<{ marker: string, Component: React.ComponentType<any> }>) => {
+  return {
     code: ({ node, inline, className, children, ...props }: any) => {
       const match = /language-(\w+)/.exec(className || "");
       return !inline && match ? (
@@ -71,12 +71,6 @@ const NonMemoizedMarkdown = ({ children }: { children: string }) => {
         return <p {...props}>{children}</p>;
       }
 
-      // Define our special blocks with their markers and components
-      const specialBlocks = [
-        { marker: '1', Component: DefinitionBlock },
-        { marker: '2', Component: BookBlock },
-      ];
-
       // Check each special block type
       for (const { marker, Component } of specialBlocks) {
         const pattern = `=${marker}=(.*?)=${marker}=`;
@@ -84,21 +78,29 @@ const NonMemoizedMarkdown = ({ children }: { children: string }) => {
 
         if (match) {
           const content = match[1].trim();
-          return (
-            <div className="bg-white dark:bg-gray-800 p-4 rounded-lg my-4 shadow-sm">
-              <Component text={content} />
-            </div>
-          );
+          return <Component text={content} />;
         }
       }
 
-      // If no special blocks found, render as normal paragraph
       return <p {...props}>{children}</p>;
     },
   };
+};
 
+const specialBlocks = [
+  { marker: '1', Component: DefinitionBlock },
+  { marker: '2', Component: BookBlock },
+];
+
+// Create components once
+const markdownComponents = createMarkdownComponents(specialBlocks);
+
+const NonMemoizedMarkdown = ({ children }: { children: string }) => {
   return (
-    <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
+    <ReactMarkdown
+      remarkPlugins={[remarkGfm]}
+      components={markdownComponents}
+    >
       {children}
     </ReactMarkdown>
   );

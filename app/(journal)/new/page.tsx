@@ -69,10 +69,10 @@ export default function New() {
         <div className="min-h-screen bg-gray-900">
             {showInput && (
                 <div className={`flex flex-col items-center pt-40 ${isInputFading ? 'animate-fade-out' : 'animate-fade-in'}`}>
-                    <h1 className='w-[90%] md:w-1/2 text-zinc-400 text-md text-center font-libre-baskerville italic pb-4'>
+                    <h1 className='w-[90%] lg:w-1/2 text-zinc-400 text-md text-center font-libre-baskerville italic pb-4'>
                         {randomQuote}
                     </h1>
-                    <form className="w-[90%] md:w-1/2 md:px-0 transition-opacity duration-500 ease-out" onSubmit={handleSubmitWithFade}>
+                    <form className="w-[90%] lg:w-1/2 md:px-0 transition-opacity duration-500 ease-out" onSubmit={handleSubmitWithFade}>
                         <MultimodalInput
                             input={input}
                             setInput={setInput}
@@ -96,7 +96,7 @@ export default function New() {
                             <StreamingTextIndicator isVisible={true} />
                         </div>
                     ) : (
-                        <div className="w-[90%] md:w-1/2 flex flex-col items-center mt-10 mb-16 animate-fade-in">
+                        <div className="w-[90%] lg:w-1/2 flex flex-col items-center mt-10 mb-16 animate-fade-in">
                             <Analysis title={parsedAnalysis.title} content={parsedAnalysis.content} isLoading={isLoading} />
                         </div>
                     )}
