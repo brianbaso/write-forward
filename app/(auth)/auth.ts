@@ -1,10 +1,17 @@
 import { compare } from "bcrypt-ts";
 import NextAuth, { User, Session } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import Google from "next-auth/providers/google";
 
-import { getUser } from "@/db/queries";
+import { getUser, createUser } from "@/db/queries";
 
 import { authConfig } from "./auth.config";
+
+declare module "next-auth" {
+  interface User {
+    sub?: string;
+  }
+}
 
 interface ExtendedSession extends Session {
   user: User;
@@ -27,13 +34,27 @@ export const {
         if (passwordsMatch) return users[0] as any;
       },
     }),
+    Google({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      profile(profile) {
+        return {
+          sub: profile.sub,
+          email: profile.email,
+        }
+      }
+    }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
+    async jwt({ token, user, account }) {
+      if (account?.provider === "google" && token.email) {
+        const [dbUser] = await getUser(token.email as string);
+        if (dbUser) {
+          token.id = dbUser.id;
+        }
+      } else if (user) {
         token.id = user.id;
       }
-
       return token;
     },
     async session({
@@ -46,8 +67,29 @@ export const {
       if (session.user) {
         session.user.id = token.id as string;
       }
-
       return session;
+    },
+    async signIn({ user, account }) {
+      if (account?.provider === "google" && user.email) {
+        console.log('user', user);
+        console.log('account', account);
+        try {
+          // Check if user exists
+          const [existingUser] = await getUser(user.email);
+
+          if (!existingUser && user.sub) {
+            console.log('creating user', user.email, user.sub);
+            await createUser(user.email, undefined, user.sub);
+          }
+
+          return true; // Allow sign in
+        } catch (error) {
+          console.error("Error during Google sign in:", error);
+          return false; // Block sign in on error
+        }
+      }
+
+      return true; // Allow sign in for other providers
     },
   },
 });

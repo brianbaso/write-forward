@@ -10,11 +10,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useBreakpoint } from "@/lib/useBreakpoint";
 import { fetcher } from "@/lib/utils";
 import Cat from "@/public/images/cat.png";
+import { auth } from '@/app/(auth)/auth';
 
 export default function HomePage() {
     const { data: entries, isLoading } = useSWR("/api/journal/history", fetcher, {
         fallbackData: [],
     });
+
     const isLg = useBreakpoint('lg');
     const router = useRouter();
 
