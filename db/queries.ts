@@ -109,7 +109,6 @@ export async function getChatById({ id }: { id: string }) {
 }
 
 export async function saveJournalEntry({ id, entryText, userId }: { id: string, entryText: string, userId: string }) {
-  console.log('saving journal entry', id, entryText, userId);
   try {
     return await db.insert(journal).values({ id, createdAt: new Date(), userId, entryText });
   } catch (error) {

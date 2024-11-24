@@ -22,7 +22,6 @@ export default async function Page({ params }: { params: any }) {
   };
 
   const session = await auth();
-  console.log(session);
 
   if (!session || !session.user) {
     return notFound();

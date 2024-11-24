@@ -4,13 +4,13 @@ import Link from "next/link";
 import { useRouter } from 'next/navigation';
 import useSWR from "swr";
 
+import { auth } from '@/app/(auth)/auth';
 import { PencilEditIcon } from "@/components/custom/icons";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useBreakpoint } from "@/lib/useBreakpoint";
 import { fetcher } from "@/lib/utils";
 import Cat from "@/public/images/cat.png";
-import { auth } from '@/app/(auth)/auth';
 
 export default function HomePage() {
     const { data: entries, isLoading } = useSWR("/api/journal/history", fetcher, {

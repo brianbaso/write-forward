@@ -71,14 +71,11 @@ export const {
     },
     async signIn({ user, account }) {
       if (account?.provider === "google" && user.email) {
-        console.log('user', user);
-        console.log('account', account);
         try {
           // Check if user exists
           const [existingUser] = await getUser(user.email);
 
           if (!existingUser && user.sub) {
-            console.log('creating user', user.email, user.sub);
             await createUser(user.email, undefined, user.sub);
           }
 
