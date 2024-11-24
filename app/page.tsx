@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from 'next/navigation';
 import useSWR from "swr";
 
+import { auth } from '@/app/(auth)/auth';
 import { PencilEditIcon } from "@/components/custom/icons";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -15,6 +16,7 @@ export default function HomePage() {
     const { data: entries, isLoading } = useSWR("/api/journal/history", fetcher, {
         fallbackData: [],
     });
+
     const isLg = useBreakpoint('lg');
     const router = useRouter();
 

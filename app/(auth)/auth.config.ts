@@ -15,6 +15,11 @@ export const authConfig = {
       let isOnChat = nextUrl.pathname.startsWith("/");
       let isOnRegister = nextUrl.pathname.startsWith("/register");
       let isOnLogin = nextUrl.pathname.startsWith("/login");
+      let isOnAuth = nextUrl.pathname.startsWith("/api/auth");
+
+      if (isOnAuth) {
+        return true;
+      }
 
       if (isLoggedIn && (isOnLogin || isOnRegister)) {
         return Response.redirect(new URL("/", nextUrl));

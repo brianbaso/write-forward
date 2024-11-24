@@ -4,8 +4,10 @@ import { pgTable, varchar, timestamp, json, uuid, text } from "drizzle-orm/pg-co
 
 export const user = pgTable("User", {
   id: uuid("id").primaryKey().notNull().defaultRandom(),
+  sub: varchar("sub", { length: 64 }),
   email: varchar("email", { length: 64 }).notNull(),
   password: varchar("password", { length: 64 }),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
 });
 
 export type User = InferSelectModel<typeof user>;

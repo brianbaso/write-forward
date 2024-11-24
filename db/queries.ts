@@ -22,14 +22,23 @@ export async function getUser(email: string): Promise<Array<User>> {
   }
 }
 
-export async function createUser(email: string, password: string) {
+export async function createUser(email: string, password?: string, sub?: string) {
+  if (!password) {
+    try {
+      return await db.insert(user).values({ email, sub });
+    } catch (error) {
+      console.error("Failed to create google user in database");
+      throw error;
+    }
+  }
+
   let salt = genSaltSync(10);
   let hash = hashSync(password, salt);
 
   try {
     return await db.insert(user).values({ email, password: hash });
   } catch (error) {
-    console.error("Failed to create user in database");
+    console.error("Failed to create credentials user in database");
     throw error;
   }
 }
